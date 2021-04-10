@@ -89,7 +89,7 @@
 	<%
 		String userTable = (String) session.getAttribute("userTable");
 	
-		if (userTable.equals("administrator")) {
+		if (userTable != null && userTable.equals("administrator")) {
 			%> <br> <a href="csAccountCreate.jsp">Customer Service Account Creation</a> <%
 		}
 	%>
