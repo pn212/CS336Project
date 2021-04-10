@@ -85,5 +85,13 @@
 
 
 	<a href = "logout.jsp">Logout</a>
+	
+	<%
+		String userTable = (String) session.getAttribute("userTable");
+	
+		if (userTable != null && userTable.equals("administrator")) {
+			%> <br> <a href="csAccountCreate.jsp">Customer Service Account Creation</a> <%
+		}
+	%>
 </body>
 </html>
