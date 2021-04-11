@@ -264,3 +264,31 @@ CREATE TABLE AlertForAttributeName (
     FOREIGN KEY (`name`, catName) references AttributeName (`name`, catName)
 );
 
+
+DROP TABLE IF EXISTS ForumPost;
+CREATE TABLE ForumPost (
+	forumId int auto_increment,
+	title varchar(50) NOT NULL,
+	description varchar(1000) NOT NULL,
+	userId int NOT NULL,
+	PRIMARY KEY (forumId),
+	FOREIGN KEY (userId) references EndUser (userId)
+);
+
+DROP TABLE IF EXISTS ForumAnswer;
+CREATE TABLE ForumAnswer (
+	answerId int auto_increment,
+	content varchar(1000) NOT NULL,
+	csId int NOT NULL,
+	PRIMARY KEY (answerId),
+	FOREIGN KEY (csId) references CustomerSupport (userId)
+);
+
+DROP TABLE IF EXISTS ForumComment;
+CREATE TABLE ForumComment (
+	commentId int auto_increment,
+	content varchar(1000) NOT NULL,
+	userId int NOT NULL,
+	PRIMARY KEY (commentId),
+	FOREIGN KEY (userId) references EndUser (userId)
+);
