@@ -44,12 +44,12 @@ try{
 	<form method= "post" action = "addItem.jsp" >
 	<label for="itemName" >Item Name</label>
 	<input type="text" id= "itemName" name= "itemName" >
+	<input type="hidden" id="subcat" name="subcat" value= <%=subCatType %>>
 	<br>
 	<% 
 	for(String attribute: attributes){ %>
 		<label for= <%=attribute %> > <%=attribute %> </label>
 		<input type= "text" id= <%=attribute%> name= <%=attribute%> > 
-		<input type="hidden" id="subcat" name="subcat" value= <%=subCatType %>>
 		<br>
 		<%	
 					
