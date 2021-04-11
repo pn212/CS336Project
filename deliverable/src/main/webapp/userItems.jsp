@@ -58,7 +58,7 @@ try{
 	<form method = "post" action = "account.jsp">
 		<input type = "submit" value = "Back">
 	</form>
-	
+	<a href = "itemSubCat.jsp">Create an Item</a>
 	
 	
 	

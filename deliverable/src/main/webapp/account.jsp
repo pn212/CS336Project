@@ -85,5 +85,8 @@
 
 
 	<a href = "logout.jsp">Logout</a>
+	<br> 
+	<a href = "userItems.jsp">View Items</a>
+	
 </body>
 </html>
