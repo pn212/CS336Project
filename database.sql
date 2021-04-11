@@ -171,9 +171,9 @@ DROP TABLE IF EXISTS Auction;
 CREATE TABLE Auction (
 	auctionName varchar(100) NOT NULL,
     `description` varchar(1000)NOT NULL DEFAULT '',
-    minPriceCents decimal(15,2) NOT NULL, 
-    startPriceCents decimal(15,2) NOT NULL,
-    incPriceCents decimal(15,2) NOT NULL,
+    minPrice decimal(15,2) NOT NULL, 
+    startPrice decimal(15,2) NOT NULL,
+    incPrice decimal(15,2) NOT NULL,
     startingDateTime datetime NOT NULL,
     endingDateTime datetime NOT NULL,
     itemId int NOT NULL,
@@ -185,7 +185,7 @@ CREATE TABLE Auction (
 -- Table Structure for Bid -- 
 DROP TABLE IF EXISTS Bid;
 CREATE TABLE Bid (
-	amountCents int NOT NULL, -- price stored as total cents and later displayed as dollar amount --
+	amount decimal(15,2) NOT NULL, -- price stored as total cents and later displayed as dollar amount --
     bidDateTime datetime NOT NULL,
     auctionId int NOT NULL,
     userId int NOT NULL,
