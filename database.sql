@@ -267,28 +267,35 @@ CREATE TABLE AlertForAttributeName (
 
 DROP TABLE IF EXISTS ForumPost;
 CREATE TABLE ForumPost (
-	forumId int auto_increment,
+	postId int auto_increment,
 	title varchar(50) NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 	description varchar(1000) NOT NULL,
 	userId int NOT NULL,
-	PRIMARY KEY (forumId),
+	PRIMARY KEY (postId),
 	FOREIGN KEY (userId) references EndUser (userId)
 );
 
 DROP TABLE IF EXISTS ForumAnswer;
 CREATE TABLE ForumAnswer (
 	answerId int auto_increment,
+    postId int NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 	content varchar(1000) NOT NULL,
 	csId int NOT NULL,
 	PRIMARY KEY (answerId),
-	FOREIGN KEY (csId) references CustomerSupport (userId)
+	FOREIGN KEY (csId) references CustomerSupport (userId),
+    FOREIGN KEY (postId) references ForumPost (postId)
 );
 
 DROP TABLE IF EXISTS ForumComment;
 CREATE TABLE ForumComment (
 	commentId int auto_increment,
+    postId int NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 	content varchar(1000) NOT NULL,
 	userId int NOT NULL,
 	PRIMARY KEY (commentId),
-	FOREIGN KEY (userId) references EndUser (userId)
+	FOREIGN KEY (userId) references EndUser (userId),
+    FOREIGN KEY (postId) references ForumPost (postId)
 );
