@@ -24,6 +24,9 @@ try{
 	}
 	
 	String subCatType = request.getParameter("subcat"); 
+	if(subCatType == null || subCatType.isEmpty()){
+		response.sendRedirect("itemSubCat.jsp");
+	}
 	String str1 = "SELECT name from AttributeName where catname = ? ";
 	PreparedStatement ps = conn.prepareStatement(str1);
 	ps.setString(1, subCatType);
