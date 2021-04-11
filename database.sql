@@ -205,7 +205,7 @@ CREATE TABLE AlertSettings (
 -- Table Structure for AutoBid --
 DROP TABLE IF EXISTS AutoBid;
 CREATE TABLE AutoBid (
-	maxAmount int NOT NULL,
+	maxAmount decimal(15,2) NOT NULL,
     userID int NOT NULL,
     auctionId int NOT NULL,
     PRIMARY KEY (userId, auctionId),
