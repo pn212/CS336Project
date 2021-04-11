@@ -44,12 +44,12 @@ try{
 	<form method= "post" action = "addItem.jsp" >
 	<label for="itemName" >Item Name</label>
 	<input type="text" id= "itemName" name= "itemName" >
-	<input type="hidden" id="subcat" name="subcat" value= <%=subCatType %>>
+	<input type="hidden" id="subcat" name="subcat" value= "<%=subCatType %>">
 	<br>
 	<% 
 	for(String attribute: attributes){ %>
 		<label for= <%=attribute %> > <%=attribute %> </label>
-		<input type= "text" id= <%=attribute%> name= <%=attribute%> > 
+		<input type= "text" id= "<%=attribute%>" name= "<%=attribute%>" > 
 		<br>
 		<%	
 					
@@ -59,6 +59,10 @@ try{
 	</form>	
 	
 	<% 
+	String error = request.getParameter("error");
+	if(error != null && error.equals("emptyFields")){
+		out.print("<span>Please fill out all fields</span>");
+	}
 } catch(Exception e){
 	out.print(e);
 }

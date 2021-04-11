@@ -9,8 +9,23 @@
 <title>Auction Site|Add Item</title>
 </head>
 <body>
+<%!
+public boolean emptyFields(ArrayList<String> Attributes, HttpServletRequest request){ // checks if user entered item name/attributes
+	if(request.getParameter("itemName") == null || request.getParameter("itemName").trim().isEmpty()){
+		return true;
+	}
+	for(String field: Attributes){
+		if(request.getParameter(field) == null || request.getParameter(field).trim().isEmpty()){
+			return true;
+		}
+	}
+		
+	return false;
+}
+%>
 <%
 try{
+	
 	
 	// should not happen
 	if(session == null){
@@ -34,14 +49,6 @@ try{
 		response.sendRedirect("index.jsp?error=failed");
 	}
 	
-	// add item to items table
-	
-	String insertItem = "INSERT into Item (userId, name) values (?,?)";
-	PreparedStatement preparedstmt = conn.prepareStatement(insertItem);
-	preparedstmt.setInt(1, userId);
-	preparedstmt.setString(2, itemName);
-	preparedstmt.executeUpdate();
-	
 	// give item all of its attributes
 	
 	String subCatType = request.getParameter("subcat"); 
@@ -57,34 +64,57 @@ try{
 		attributes.add(rs.getString("name"));
 	}
 	
-	// fetch itemid of item just inserted into the table 
-	// (will have max itemid of all items in the table)
+	// check if attributes have been filled out
+	if(emptyFields(attributes, request)){
+		%>
 	
-	String str2 = "SELECT itemId from Item where itemId = (SELECT max(itemID) from Item)";
-	Statement maxstmt = conn.createStatement();
-	ResultSet rsMax = maxstmt.executeQuery(str2);
-	Integer itemId = 0;
-	// fix error check later
-	if(!rsMax.next()){
-		out.print("No items in Item <br>" );
+		<form id = "errorRedirect" method = "post" action = "enterItemInfo.jsp?error=emptyFields"  >
+		<input type = "hidden" name = "subcat" value = "<%= subCatType %>" >
+		</form>
+		<script>document.getElementById("errorRedirect").submit();</script>
+		<% 	
 	}
 	else{
-		itemId = rsMax.getInt("itemId");
-	}
-	
-	for(String attribute: attributes){
-		String attrVal = request.getParameter(attribute);
-		String insertAttr = 
+		// add item to items table
+		String insertItem = "INSERT into Item (userId, name) values (?,?)";
+		PreparedStatement preparedstmt = conn.prepareStatement(insertItem);
+		preparedstmt.setInt(1, userId);
+		preparedstmt.setString(2, itemName);
+		preparedstmt.executeUpdate();
+		
+		// fetch itemid of item just inserted into the table 
+		// (will have max itemid of all items in the table)
+		
+		String str2 = "SELECT itemId from Item where itemId = (SELECT max(itemID) from Item)";
+		Statement maxstmt = conn.createStatement();
+		ResultSet rsMax = maxstmt.executeQuery(str2);
+		Integer itemId = 0;
+		// fix error check later
+		if(!rsMax.next()){ // should not happen because item was just inserted
+			out.print("<span>No items in Item</span>" );
+		}
+		else{
+			itemId = rsMax.getInt("itemId");
+		}
+		
+		
+		for(String attribute: attributes){
+			String attrVal = request.getParameter(attribute);
+			String insertAttr = 
 				"INSERT into ItemAttribute (attributeValue, itemId, name, catName) Values (?,?,?,?)";
-		PreparedStatement attrPS = conn.prepareStatement(insertAttr);
-		attrPS.setString(1, attrVal);
-		attrPS.setInt(2, itemId);
-		attrPS.setString(3, attribute);
-		attrPS.setString(4, subCatType);
-		attrPS.executeUpdate();
+			PreparedStatement attrPS = conn.prepareStatement(insertAttr);
+			attrPS.setString(1, attrVal);
+			attrPS.setInt(2, itemId);
+			attrPS.setString(3, attribute);
+			attrPS.setString(4, subCatType);
+			attrPS.executeUpdate();
+		}
+			
+		response.sendRedirect("userItems.jsp");
+		
+		
 	}
 	
-	response.sendRedirect("userItems.jsp");
 	
 } catch(Exception e){
 	out.print(e);
