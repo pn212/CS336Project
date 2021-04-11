@@ -33,7 +33,7 @@ try{
 	
 	String stmt = "SELECT a.itemId itemId, a.name itemName, b.catName catName,"
 			+ "b.attributeValue attributeValue from Item a, ItemAttribute b where "
-			+ "a.itemId = b.itemId and a.userId = ?";
+			+ "a.itemId = b.itemId and a.userId = ? order by a.itemId asc";
 	PreparedStatement ps = conn.prepareStatement(stmt);
 	ps.setInt(1, userId);
 	ResultSet rs = ps.executeQuery();
