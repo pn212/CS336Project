@@ -189,7 +189,7 @@ CREATE TABLE Bid (
     bidDateTime datetime NOT NULL,
     auctionId int NOT NULL,
     userId int NOT NULL,
-    PRIMARY KEY (auctionId, amountCents),
+    PRIMARY KEY (auctionId, amount),
     FOREIGN KEY (auctionId) references Auction (auctionId),
     FOREIGN KEY (userId) references endUser (userId)
 );
