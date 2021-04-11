@@ -185,7 +185,7 @@ CREATE TABLE Auction (
 -- Table Structure for Bid -- 
 DROP TABLE IF EXISTS Bid;
 CREATE TABLE Bid (
-	amount decimal(15,2) NOT NULL, -- price stored as total cents and later displayed as dollar amount --
+	amount decimal(15,2) NOT NULL,
     bidDateTime datetime NOT NULL,
     auctionId int NOT NULL,
     userId int NOT NULL,
