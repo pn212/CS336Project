@@ -146,7 +146,8 @@ CREATE TABLE `AttributeName` (
 
 LOCK TABLES `AttributeName` WRITE;
 /*!40000 ALTER TABLE `AttributeName` DISABLE KEYS */;
-INSERT INTO `AttributeName` VALUES ('Car','doorCount'),('Bike','mpg'),('Bus','seatCount');
+INSERT INTO `AttributeName` (`catName`, `name`)
+VALUES ('Car','doorCount'),('Bike','mpg'),('Bus','seatCount');
 /*!40000 ALTER TABLE `AttributeName` ENABLE KEYS */;
 UNLOCK TABLES;
 
