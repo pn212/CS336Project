@@ -22,18 +22,19 @@ public String createRow(Integer itemId, Connection conn) throws SQLException {
 	while(rs1.next()){
 		name = rs1.getString("name");
 	}
-	result += itemId + "     " + name + "    ";
+	result += itemId + "  " + name + "  ";
 	
 	// query Item to get a table with Attribute Name and Values as columns
 	
-	String stmt2 = "SELECT name, attributeValue FROM ItemAttribute where itemId = ?";
+	String stmt2 = "SELECT catName, name, attributeValue FROM ItemAttribute where itemId = ?";
 	PreparedStatement ps2 = conn.prepareStatement(stmt2);
 	ps2.setInt(1, itemId);
 	ResultSet rs2 = ps2.executeQuery();
 	while (rs2.next()){
+		String catType = rs2.getString("catName");
 		String attrName = rs2.getString("name");
 		String attrVal = rs2.getString("attributeValue");
-		result += attrName + "     " + attrVal;
+		result += catType + "  " + attrName + "   " + attrVal;
 	}
 	
 	return result;
@@ -63,18 +64,12 @@ try{
 		out.print("Could not connect to database");
 		response.sendRedirect("index.jsp?error=failed");
 	}
-	/*
-	String stmt = "SELECT a.itemId itemId, a.name itemName, b.catName catName,"
-			+ "b.attributeValue attributeValue from Item a, ItemAttribute b where "
-			+ "a.itemId = b.itemId and a.userId = ? order by a.itemId asc";
-	PreparedStatement ps = conn.prepareStatement(stmt);
-	ps.setInt(1, userId);
-	ResultSet rs = ps.executeQuery();
-	*/
+	
 	// query Item to get all itemIds of items the user owns
-	String stmt = "SELECT itemId FROM Item WHERE userId = ?";
+	String stmt = "SELECT itemId FROM Item WHERE userId = ? and isSold = ? order by itemId asc";
 	PreparedStatement ps = conn.prepareStatement(stmt);
 	ps.setInt(1, userId);
+	ps.setInt(2, 0);
 	ResultSet rs = ps.executeQuery();
 	
 	// move ids into an ArrayList
@@ -89,38 +84,39 @@ try{
 		String row = createRow(itemIdList.get(i), conn);
 		rows.add(row);
 	}
-	/*
-	for (String row: rows){
-		out.print(row);
-		out.print("<br>");
-	}
-	*/
+	// close connection
+	db.closeConnection(conn);
+	// make rows a radio button group
 	
 	%>
-	<!--
-	
-	Items Owned by User:
+	List of Items:
+	<br> <br>
+	ItemId		Item Information
+	<form method = "post" action = "createAuction.jsp">
+	<% 
+	for(int i = 0; i < rows.size(); i++){ 
+		String row = rows.get(i);
+		String itemId = itemIdList.get(i).toString();
+		%>
+		<input type ="radio" id = "<%=itemId %>" name = "items" value = "<%=itemId %>"  
+		<%if (i == 0) out.print("checked"); %>>
+		<label for= "<%=itemId %>"> <%=row %> </label>
+		<br>
+		
+		<% 
+	} %>
 	<br>
-	<pre> ItemID	Name </pre>
-	<br>
-	-->
-	<%
-	/*
-	while(rs.next()){
-		out.print("<pre>");
-		out.print(rs.getInt("itemId") + "&#9" + rs.getString("itemName"));
-		out.print("</pre>");
-		out.print("<br>");
-	}
-	*/
+	<input type = "submit" value = "Create Auction For Selected Item">
+	</form>
 	
-	%>
+	<br>
 
 	
+
 	<form method = "post" action = "account.jsp">
 		<input type = "submit" value = "Back">
 	</form>
-	<a href = "itemSubCat.jsp">Create an Item</a>
+	<a href = "itemSubCat.jsp">Create a New Item</a>
 	
 	
 	
