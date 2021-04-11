@@ -51,7 +51,7 @@ public class ApplicationDB {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		ApplicationDB dao = new ApplicationDB();
 		Connection connection = dao.getConnection();
