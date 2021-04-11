@@ -42,14 +42,17 @@ try{
 	
 	<form method="post" action = "enterItemInfo.jsp">
 	<%
-	for(String catName: subCatList){
+	for(int i = 0; i < subCatList.size(); i++){
+		String catName = subCatList.get(i);
 	%>
-		<input type = "radio" id= <%=catName %> name = "subcat" value = <%=catName %> >
+		<input type = "radio" id= <%=catName %> name = "subcat" value = <%=catName %> 
+		<% if (i == 0) out.print("checked"); %> >
 		<label for = <%=catName %>><%=catName %></label>
 		<br>
 		
 		 <% 
 	}
+	
 	
 
 	%>
