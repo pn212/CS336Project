@@ -7,7 +7,6 @@ public class Prices {
 
 	public static double getPrice(String price) {
 		double amount = Double.parseDouble(price);
-		System.out.println(amount);
 		DecimalFormat df = new DecimalFormat("#.##");
 	    amount = Double.parseDouble(df.format(amount));
 	    return amount;
