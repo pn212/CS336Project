@@ -132,10 +132,13 @@ CREATE TABLE SubCategoryType (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
+-- domain refers to the type of attribute
+-- domain can be 'string', 'int', 'double', or 'boolean'
 DROP TABLE IF EXISTS AttributeName;
 CREATE TABLE AttributeName (
 	`name` varchar(50) NOT NULL,
     catName varchar(50) NOT NULL,
+    `domain` varchar(50) NOT NULL default 'string',
     FOREIGN KEY (catName) references SubCategoryType (`name`),
     PRIMARY KEY (`name`, catName)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -151,8 +154,9 @@ UNLOCK TABLES;
 
 LOCK TABLES AttributeName WRITE;
 /*!40000 ALTER TABLE AttributeName DISABLE KEYS */;
-INSERT INTO AttributeName (`name`, catName)
-VALUES ('doorCount', 'Car'), ('mpg', 'Bike'), ('seatCount', 'Bus');
+INSERT INTO AttributeName (`name`, catName, `domain`)
+VALUES ('Wheel Count', 'Car', 'int'), ('Door Count', 'Car', 'int'), ('Color', 'Car', 'string'), 
+('Weight', 'Car', 'double'), ('MPG', 'Bike', 'int'), ('Seat Count', 'Bus', 'int');
 /*!40000 ALTER TABLE AttributeName ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -180,7 +184,6 @@ CREATE TABLE Auction (
     itemId int NOT NULL,
     auctionId int AUTO_INCREMENT PRIMARY KEY,
     FOREIGN KEY (itemId) references Item (itemId)
-    
 ) ;
 
 -- Table Structure for Bid -- 
@@ -223,16 +226,6 @@ CREATE TABLE Alert (
     FOREIGN KEY (auctionId) references Auction (auctionId)
 );
 
-/*
-DROP TABLE IF EXISTS ItemUser;
-CREATE TABLE ItemUser (
-	itemId int PRIMARY KEY,
-    userId int,
-    FOREIGN KEY (itemId) references Item (itemId),
-    FOREIGN KEY (userId) references endUser (userId)
-);
-*/
-
 DROP TABLE IF EXISTS ItemAttribute;
 CREATE TABLE ItemAttribute (
 	attributeValue varchar(100) NOT NULL, -- string for now that we can parse and convert --
@@ -264,4 +257,6 @@ CREATE TABLE AlertForAttributeName (
     FOREIGN KEY (alertSettingsId) references AlertSettings (alertSettingsId),
     FOREIGN KEY (`name`, catName) references AttributeName (`name`, catName)
 );
+
+
 
