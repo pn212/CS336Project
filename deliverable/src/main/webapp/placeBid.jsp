@@ -44,10 +44,12 @@ try{
 	ResultSet auctionRS = auctionGS.executeQuery();
 	if(!auctionRS.next()){
 		response.sendRedirect("account.jsp");
+		return;
 	}
 	else{
 		if(auctionRS.getInt("userId") == userId){
 			response.sendRedirect("account.jsp");
+			return;
 		}
 	}
 	
