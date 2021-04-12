@@ -132,6 +132,8 @@ CREATE TABLE SubCategoryType (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
+-- domain refers to the type of attribute
+-- domain can be 'string', 'int', 'double', or 'boolean'
 DROP TABLE IF EXISTS AttributeName;
 CREATE TABLE AttributeName (
 	`name` varchar(50) NOT NULL,
