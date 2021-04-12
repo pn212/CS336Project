@@ -136,6 +136,7 @@ DROP TABLE IF EXISTS AttributeName;
 CREATE TABLE AttributeName (
 	`name` varchar(50) NOT NULL,
     catName varchar(50) NOT NULL,
+    `domain` varchar(50) NOT NULL default 'string',
     FOREIGN KEY (catName) references SubCategoryType (`name`),
     PRIMARY KEY (`name`, catName)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -152,7 +153,7 @@ UNLOCK TABLES;
 LOCK TABLES AttributeName WRITE;
 /*!40000 ALTER TABLE AttributeName DISABLE KEYS */;
 INSERT INTO AttributeName (`name`, catName)
-VALUES ('doorCount', 'Car'), ('mpg', 'Bike'), ('seatCount', 'Bus');
+VALUES ('numWheels', 'Car'), ('doorCount', 'Car'), ('mpg', 'Bike'), ('seatCount', 'Bus');
 /*!40000 ALTER TABLE AttributeName ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -162,6 +163,7 @@ CREATE TABLE Item (
 	itemId int auto_increment primary key,
 	`name` varchar(100) NOT NULL,
     isSold bool NOT NULL default false,
+    onAuction bool NOT NULL default false,
     userId int NOT NULL,
     FOREIGN KEY (userId) references endUser (userId)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -221,16 +223,6 @@ CREATE TABLE Alert (
     FOREIGN KEY (alertSettingsId) references AlertSettings (alertSettingsId),
     FOREIGN KEY (auctionId) references Auction (auctionId)
 );
-
-/*
-DROP TABLE IF EXISTS ItemUser;
-CREATE TABLE ItemUser (
-	itemId int PRIMARY KEY,
-    userId int,
-    FOREIGN KEY (itemId) references Item (itemId),
-    FOREIGN KEY (userId) references endUser (userId)
-);
-*/
 
 DROP TABLE IF EXISTS ItemAttribute;
 CREATE TABLE ItemAttribute (
