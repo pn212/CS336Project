@@ -21,6 +21,11 @@ try{
 	if(session.getAttribute("userId") == null){
 		response.sendRedirect("index.jsp");
 	}
+	// only endUsers can make auctions
+	String userTable = (String) session.getAttribute("userTable");
+	if (userTable == null || !userTable.equals("endUser")){
+		response.sendRedirect("account.jsp");
+	}
 	
 	String itemid = request.getParameter("items");
 	if (itemid == null || itemid.isEmpty()){
@@ -34,11 +39,11 @@ try{
 		
 	   %>
 	   <form method ="post" action = "addAuction.jsp">
-	   	<label for = "AuctionName">Auction Name</label>
-	   	<input type ="text" id = "AuctionName" name = "AuctionName">
+	   	<label for = "auctionName">Auction Name</label>
+	   	<input type ="text" id = "auctionName" name = "auctionName">
 	   	<br>
-	   	<label for = "Description">Auction Description</label>
-	   	<input type ="text" id = "Description" name = "Description">
+	   	<label for = "description">Auction Description</label>
+	   	<input type ="text" id = "description" name = "description">
 	   	<br>
 	   	<label for = "minReserve">Minimum Reserve Price</label>
 	   	<input type = "number" id = "minReserve" name = "minReserve" step = "0.01">
@@ -66,10 +71,19 @@ try{
 		   	today = year + '-' + month + '-' + day + "T00:00:00";
 		   	document.getElementById("endTime").min = today;
 	   	</script>
+	   	<input type = "hidden" id= "itemId" name = "itemId" value = <%= itemId %>>
 	   	<input type = "submit" value = "Create Auction">
 	   </form>
 
 	   <%
+	   
+	   String error = request.getParameter("error");
+	   if(error != null){
+		   if(error.equals("noName")){
+			   out.print("<span> Please Enter an Auction Name </span>");
+			   out.print("<br>");
+		   }
+	   }
 	}
 	
 } catch(Exception e){
