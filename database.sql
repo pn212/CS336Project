@@ -154,8 +154,8 @@ UNLOCK TABLES;
 LOCK TABLES AttributeName WRITE;
 /*!40000 ALTER TABLE AttributeName DISABLE KEYS */;
 INSERT INTO AttributeName (`name`, catName, `domain`)
-VALUES ('numWheels', 'Car', 'int'), ('doorCount', 'Car', 'int'), ('color', 'Car', 'string'), 
-('weight', 'Car', 'double'), ('mpg', 'Bike', 'int'), ('seatCount', 'Bus', 'int');
+VALUES ('Wheel Count', 'Car', 'int'), ('Door Count', 'Car', 'int'), ('Color', 'Car', 'string'), 
+('Weight', 'Car', 'double'), ('MPG', 'Bike', 'int'), ('Seat Count', 'Bus', 'int');
 /*!40000 ALTER TABLE AttributeName ENABLE KEYS */;
 UNLOCK TABLES;
 
