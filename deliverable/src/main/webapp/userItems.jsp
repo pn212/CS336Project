@@ -70,11 +70,12 @@ try{
 		response.sendRedirect("index.jsp?error=failed");
 	}
 	
-	// query Item to get all itemIds of items the user owns
-	String stmt = "SELECT itemId FROM Item WHERE userId = ? and isSold = ? order by itemId asc";
+	// query Item to get all itemIds of items the user owns and are not on auction
+	String stmt = "SELECT itemId FROM Item WHERE userId = ? and isSold = ? and onAuction = ? order by itemId asc";
 	PreparedStatement ps = conn.prepareStatement(stmt);
 	ps.setInt(1, userId);
 	ps.setInt(2, 0);
+	ps.setInt(3, 0);
 	ResultSet rs = ps.executeQuery();
 	
 	// move ids into an ArrayList

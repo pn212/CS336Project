@@ -162,6 +162,7 @@ CREATE TABLE Item (
 	itemId int auto_increment primary key,
 	`name` varchar(100) NOT NULL,
     isSold bool NOT NULL default false,
+    onAuction bool NOT NULL default false,
     userId int NOT NULL,
     FOREIGN KEY (userId) references endUser (userId)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -185,7 +186,7 @@ CREATE TABLE Auction (
 -- Table Structure for Bid -- 
 DROP TABLE IF EXISTS Bid;
 CREATE TABLE Bid (
-	amount decimal(15,2) NOT NULL,
+	amount decimal(15,2) NOT NULL, -- price stored as total cents and later displayed as dollar amount --
     bidDateTime datetime NOT NULL,
     auctionId int NOT NULL,
     userId int NOT NULL,
