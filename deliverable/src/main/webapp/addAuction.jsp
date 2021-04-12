@@ -168,15 +168,7 @@ try{
 			ps.setString(7, endingDate);
 			ps.setInt(8, itemId);
 			ps.executeUpdate();
-			
-			/*
-			String stmt2 = "UPDATE Item SET onAuction = ? WHERE itemId = ?";
-			PreparedStatement ps2 = conn.prepareStatement(stmt2);
-			ps2.setInt(1, 1); // true
-			ps2.setInt(2, itemId);
-			ps2.executeUpdate();
-			*/
-			
+
 			db.closeConnection(conn);
 			response.sendRedirect("account.jsp");	
 		}
