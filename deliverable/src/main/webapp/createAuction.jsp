@@ -52,6 +52,20 @@ try{
 	   	<label for = "endTime">Auction End</label>
 	   	<input type = "datetime-local" id = "endTime" name = "endTime">
 	   	<br>
+	   	<script>
+		   	var today = new Date();
+		   	var day = today.getDate() + 1; // auction must last until next day
+		   	var month = today.getMonth() + 1;
+		   	var year = today.getFullYear();
+		   	if(day < 10){
+		   		day = '0' + day;
+		   	}
+		   	if(month < 10){
+		   		month = '0' + month;
+		   	}
+		   	today = year + '-' + month + '-' + day + "T00:00:00";
+		   	document.getElementById("endTime").min = today;
+	   	</script>
 	   	<input type = "submit" value = "Create Auction">
 	   </form>
 
