@@ -152,8 +152,9 @@ UNLOCK TABLES;
 
 LOCK TABLES AttributeName WRITE;
 /*!40000 ALTER TABLE AttributeName DISABLE KEYS */;
-INSERT INTO AttributeName (`name`, catName)
-VALUES ('numWheels', 'Car'), ('doorCount', 'Car'), ('mpg', 'Bike'), ('seatCount', 'Bus');
+INSERT INTO AttributeName (`name`, catName, `domain`)
+VALUES ('numWheels', 'Car', 'int'), ('doorCount', 'Car', 'int'), ('color', 'Car', 'string'), 
+('weight', 'Car', 'double'), ('mpg', 'Bike', 'int'), ('seatCount', 'Bus', 'int');
 /*!40000 ALTER TABLE AttributeName ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -255,4 +256,6 @@ CREATE TABLE AlertForAttributeName (
     FOREIGN KEY (alertSettingsId) references AlertSettings (alertSettingsId),
     FOREIGN KEY (`name`, catName) references AttributeName (`name`, catName)
 );
+
+
 
