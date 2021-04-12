@@ -90,8 +90,6 @@ try{
 		String row = createRow(itemIdList.get(i), conn);
 		rows.add(row);
 	}
-	// close connection
-	db.closeConnection(conn);
 	// make rows a radio button group
 	
 	%>
@@ -115,17 +113,48 @@ try{
 	<input type = "submit" value = "Create Auction For Selected Item">
 	</form>
 	
+	<br> <br> <br>
+	
+	List of Items on Auction:
+	<br> <br>
+	ItemId	Item Information
+	<br>
+	<%
+	String cmd = "SELECT distinct itemId FROM Item WHERE userId = ? AND itemId IN (SELECT  "
+				+ "itemId FROM Auction)";
+	PreparedStatement auctionPS = conn.prepareStatement(cmd);
+	auctionPS.setInt(1, userId);
+	ResultSet auctionRS = auctionPS.executeQuery();
+	
+	// move ids into an ArrayList
+	ArrayList<Integer> itemIdList2 = new ArrayList<Integer>();
+	while(auctionRS.next()){
+		itemIdList2.add(auctionRS.getInt("itemId"));
+	}
+	// create an arraylist of strings where each string is a row in the displayed items list
+	ArrayList<String> rows2 = new ArrayList<String>();
+	for(int i = 0; i < itemIdList2.size(); i++){
+		String row2 = createRow(itemIdList2.get(i), conn);
+		rows2.add(row2);
+	}
+	for(int i = 0 ; i < rows2.size(); i++){
+		out.print(rows2.get(i) + "<br>");
+	}
+	
+	%>
+	
 	<br>
 
-	
-
+	<a href = "itemSubCat.jsp">Create a New Item</a>
+	<br><br>
 	<form method = "post" action = "account.jsp">
 		<input type = "submit" value = "Back">
 	</form>
-	<a href = "itemSubCat.jsp">Create a New Item</a>
 	
-	
-	
+	<% 
+	// close connection
+	db.closeConnection(conn);
+	%>
 <%	
 }catch(Exception e){
 	out.print(e);
