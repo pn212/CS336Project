@@ -10,63 +10,6 @@
 <title>Auction Site | Place a Bid</title>
 </head>
 <body>
-<%! 
-public boolean validPrice (String price){
-	if(price == null || price.isEmpty()){
-		return false;
-	}
-	int decimalCount = 0;
-	int i = 0;
-	while (i < price.length()){
-		if(!Character.isDigit(price.charAt(i))){
-			if(price.charAt(i) == '.'){
-				decimalCount++;
-				break;
-			}
-			return false;
-		}
-		i++;
-	}
-	if (decimalCount != 1){
-		return false;
-	}
-	
-	i++;
-	int centCount = 0;
-	while(i < price.length()){
-		if(!Character.isDigit(price.charAt(i))){
-			return false;
-		}
-		i++;
-		centCount++;
-	}
-	
-	if (centCount != 2){
-		return false;
-	}
-	
-	double amount = Double.parseDouble(price);
-	if(amount < 0){
-		return false;
-	}
-	return true;
-}
-public boolean validBid(double bidAmount, double startPrice, double highestBidAmount, double incPrice){
-	// no bids placed yet
-	if(highestBidAmount == 0.00 ){
-		if(bidAmount < startPrice){
-			return false;
-		}
-	}
-	else{
-		// need to increase by at least incPrice
-		if(bidAmount < highestBidAmount + incPrice){
-			return false;
-		}
-	}
-	return true;
-}
-%>
 
 <%
 
@@ -122,7 +65,7 @@ try{
 	if(bid != null && !bid.isEmpty()){
 		double bidAmount = Double.parseDouble(bid);
 		
-		if (validPrice(bid) && validBid(bidAmount, startPrice, highestBidAmount, incPrice)){
+		if (Prices.isValidPrice(bid) && Prices.isValidBid(bidAmount, startPrice, highestBidAmount, incPrice)){
 			// find string for current datetime
 			SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-dd hh:mm:ss");
 			String bidDateTime = format.format(new java.util.Date());

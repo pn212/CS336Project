@@ -10,36 +10,6 @@
 <title>Auction Site | Add Auction</title>
 </head>
 <body>
-
-<%!
-final double MAX_AMOUNT = 999999999999999.99;
-
-public double getPrice(String price) {
-	double amount = Double.parseDouble(price);
-	System.out.println(amount);
-	DecimalFormat df = new DecimalFormat("#.##");
-    amount = Double.parseDouble(df.format(amount));
-    return amount;
-}
-
-public boolean isValidPrice (String price){
-	if(price == null){
-		return false;
-	}
-	price = price.trim();
-	if (price.isEmpty()) {
-		return false;
-	}
-	
-	try {
-		double amount = getPrice(price);
-		return amount >= 0 && amount <= MAX_AMOUNT;
-	} catch (NumberFormatException e) {
-		return false;	
-	}
-}
-
-%>
 <%
 try{
 	
@@ -99,7 +69,7 @@ try{
 	String incPrice = request.getParameter("incPrice");
 	String endTime = request.getParameter("endTime");
 	
-	if (!isValidPrice(minPrice) || !isValidPrice(startPrice) || !isValidPrice(incPrice) || getPrice(incPrice) <= 0){
+	if (!Prices.isValidPrice(minPrice) || !Prices.isValidPrice(startPrice) || !Prices.isValidPrice(incPrice) || Prices.getPrice(incPrice) <= 0){
 		%>
 		<form id = "invalidPrice" method = "post" action = "createAuction.jsp?error=invalidPrice">
 			<input type = "hidden" name = "items" value = "<%=itemId %>">
@@ -118,9 +88,9 @@ try{
 	else {
 		// make information provided compatible data types with SQL insert
 		
-		double minimumPrice = getPrice(minPrice);
-		double startingPrice = getPrice(startPrice);
-		double incrementPrice = getPrice(incPrice);
+		double minimumPrice = Prices.getPrice(minPrice);
+		double startingPrice = Prices.getPrice(startPrice);
+		double incrementPrice = Prices.getPrice(incPrice);
 		
 		String endingDate = endTime.replace('T', ' ');
 		endingDate += ":00"; 
