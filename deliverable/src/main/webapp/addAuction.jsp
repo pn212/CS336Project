@@ -122,8 +122,7 @@ try{
 		</form>
 		<%
 	}
-	
-	if(endTime == null){
+	else if(endTime == null){
 		%>
 		<form id = "invalidDate" method = "post" action = "createAuction.jsp?error=invalidDate">
 			<input type = "hidden" name = "items" value = "<%=itemId %>">
@@ -131,57 +130,57 @@ try{
 		</form>
 		<%
 	}
-	
-	// make information provided compatible data types with SQL insert
-	
-	double minimumPrice = Double.parseDouble(minPrice);
-	double startingPrice = Double.parseDouble(startPrice);
-	double incrementPrice = Double.parseDouble(incPrice);
-	
-	String endingDate = endTime.replace('T', ' ');
-	endingDate += ":00"; 
-	
-	//Get the database connection
-	ApplicationDB db = new ApplicationDB();	
-	Connection conn = db.getConnection();
+	else {
+		// make information provided compatible data types with SQL insert
 		
-	if (conn == null) {
-		System.out.println("Could not connect to database");
-		out.print("Could not connect to database");
-		response.sendRedirect("index.jsp?error=failed");
-	}
-	
-	// find string for current datetime
-	SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-dd hh:mm:ss");
-	String startingDate = format.format(new java.util.Date());
-	
+		double minimumPrice = Double.parseDouble(minPrice);
+		double startingPrice = Double.parseDouble(startPrice);
+		double incrementPrice = Double.parseDouble(incPrice);
+		
+		String endingDate = endTime.replace('T', ' ');
+		endingDate += ":00"; 
+		
+		//Get the database connection
+		ApplicationDB db = new ApplicationDB();	
+		Connection conn = db.getConnection();
 			
-	// insert into auction table
-	String stmt = "INSERT into Auction (auctionName, description, minPrice," + 
-			"startPrice, incPrice, startingDateTime, endingDateTime, itemId) VALUES (?,?,?,?,?,?,?,?)";
-	PreparedStatement ps = conn.prepareStatement(stmt);
-	ps.setString(1, auctionName);
-	ps.setString(2, description);
-	ps.setDouble(3, minimumPrice);
-	ps.setDouble(4, startingPrice);
-	ps.setDouble(5, incrementPrice);
-	ps.setString(6, startingDate);
-	ps.setString(7, endingDate);
-	ps.setInt(8, itemId);
-	ps.executeUpdate();
-	
-	/*
-	String stmt2 = "UPDATE Item SET onAuction = ? WHERE itemId = ?";
-	PreparedStatement ps2 = conn.prepareStatement(stmt2);
-	ps2.setInt(1, 1); // true
-	ps2.setInt(2, itemId);
-	ps2.executeUpdate();
-	*/
-	
-	db.closeConnection(conn);
-	response.sendRedirect("account.jsp");
-	
-	
+		if (conn == null) {
+			System.out.println("Could not connect to database");
+			out.print("Could not connect to database");
+			response.sendRedirect("index.jsp?error=failed");
+		}
+		else {
+			// find string for current datetime
+			SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-dd hh:mm:ss");
+			String startingDate = format.format(new java.util.Date());
+			
+					
+			// insert into auction table
+			String stmt = "INSERT into Auction (auctionName, description, minPrice," + 
+					"startPrice, incPrice, startingDateTime, endingDateTime, itemId) VALUES (?,?,?,?,?,?,?,?)";
+			PreparedStatement ps = conn.prepareStatement(stmt);
+			ps.setString(1, auctionName);
+			ps.setString(2, description);
+			ps.setDouble(3, minimumPrice);
+			ps.setDouble(4, startingPrice);
+			ps.setDouble(5, incrementPrice);
+			ps.setString(6, startingDate);
+			ps.setString(7, endingDate);
+			ps.setInt(8, itemId);
+			ps.executeUpdate();
+			
+			/*
+			String stmt2 = "UPDATE Item SET onAuction = ? WHERE itemId = ?";
+			PreparedStatement ps2 = conn.prepareStatement(stmt2);
+			ps2.setInt(1, 1); // true
+			ps2.setInt(2, itemId);
+			ps2.executeUpdate();
+			*/
+			
+			db.closeConnection(conn);
+			response.sendRedirect("account.jsp");	
+		}
+	}
 } catch(Exception e){
 	out.print(e);
 }
