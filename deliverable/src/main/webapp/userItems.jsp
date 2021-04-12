@@ -52,6 +52,11 @@ try{
 	if(session.getAttribute("userId") == null){
 		response.sendRedirect("index.jsp");
 	}
+	
+	String userTable = (String) session.getAttribute("userTable");
+	if (userTable == null || !userTable.equals("endUser")){
+		response.sendRedirect("account.jsp");
+	}
 		
 	Integer userId = (Integer)session.getAttribute("userId");
 	

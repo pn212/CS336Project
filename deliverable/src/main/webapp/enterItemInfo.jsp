@@ -23,6 +23,11 @@ try{
 		response.sendRedirect("index.jsp?error=failed");
 	}
 	
+	String userTable = (String) session.getAttribute("userTable");
+	if (userTable == null || !userTable.equals("endUser")){
+		response.sendRedirect("account.jsp");
+	}
+	
 	String subCatType = request.getParameter("subcat"); 
 	if(subCatType == null || subCatType.isEmpty()){
 		response.sendRedirect("itemSubCat.jsp");

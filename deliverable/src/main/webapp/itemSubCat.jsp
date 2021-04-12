@@ -22,6 +22,11 @@ try{
 		response.sendRedirect("index.jsp?error=failed");
 	}
 	
+	String userTable = (String) session.getAttribute("userTable");
+	if (userTable == null || !userTable.equals("endUser")){
+		response.sendRedirect("account.jsp");
+	}
+	
 	// Query the subcategory type names from the SubCategory table
 	
 	String str = "SELECT name from SubCategoryType";

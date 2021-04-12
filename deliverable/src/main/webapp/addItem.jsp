@@ -49,6 +49,11 @@ try{
 		response.sendRedirect("index.jsp?error=failed");
 	}
 	
+	String userTable = (String) session.getAttribute("userTable");
+	if (userTable == null || !userTable.equals("endUser")){
+		response.sendRedirect("account.jsp");
+	}
+	
 	// give item all of its attributes
 	
 	String subCatType = request.getParameter("subcat"); 
