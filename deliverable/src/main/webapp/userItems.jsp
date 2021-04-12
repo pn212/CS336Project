@@ -141,6 +141,9 @@ try{
 		out.print(rows2.get(i) + "<br>");
 	}
 	
+	// close connection
+	db.closeConnection(conn);
+	
 	%>
 	
 	<br>
@@ -151,10 +154,6 @@ try{
 		<input type = "submit" value = "Back">
 	</form>
 	
-	<% 
-	// close connection
-	db.closeConnection(conn);
-	%>
 <%	
 }catch(Exception e){
 	out.print(e);
