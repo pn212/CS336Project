@@ -23,7 +23,15 @@ try{
 		response.sendRedirect("index.jsp?error=failed");
 	}
 	
+	String userTable = (String) session.getAttribute("userTable");
+	if (userTable == null || !userTable.equals("endUser")){
+		response.sendRedirect("account.jsp");
+	}
+	
 	String subCatType = request.getParameter("subcat"); 
+	if(subCatType == null || subCatType.isEmpty()){
+		response.sendRedirect("itemSubCat.jsp");
+	}
 	String str1 = "SELECT name from AttributeName where catname = ? ";
 	PreparedStatement ps = conn.prepareStatement(str1);
 	ps.setString(1, subCatType);
@@ -40,16 +48,17 @@ try{
 	db.closeConnection(conn);
 	%>
 	
+	Item Type: <%out.print(subCatType); %>
 	
 	<form method= "post" action = "addItem.jsp" >
 	<label for="itemName" >Item Name</label>
 	<input type="text" id= "itemName" name= "itemName" >
-	<input type="hidden" id="subcat" name="subcat" value= <%=subCatType %>>
+	<input type="hidden" id="subcat" name="subcat" value= "<%=subCatType %>">
 	<br>
 	<% 
 	for(String attribute: attributes){ %>
 		<label for= <%=attribute %> > <%=attribute %> </label>
-		<input type= "text" id= <%=attribute%> name= <%=attribute%> > 
+		<input type= "text" id= "<%=attribute%>" name= "<%=attribute%>" > 
 		<br>
 		<%	
 					
@@ -59,6 +68,23 @@ try{
 	</form>	
 	
 	<% 
+	String error = request.getParameter("error");
+	if(error != null){
+		if(error.equals("emptyFields")){
+			out.print("<span>Please fill out all fields</span>");
+		}
+		if(error.equals("invalidFieldLength")){
+			out.print("<span>Invalid fields:</span>");
+			out.print("<br>");
+			out.print("<span>Please keep name length <= 50 and attribute length <= 100</span>");
+		}
+		if(error.equals("invalidFieldType")){
+			out.print("<span>Invalid fields:</span>");
+			out.print("<br>");
+			out.print("<span>Please fill out fields with their proper type</span>");
+		}
+			
+	}
 } catch(Exception e){
 	out.print(e);
 }
