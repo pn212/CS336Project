@@ -184,7 +184,6 @@ CREATE TABLE Auction (
     itemId int NOT NULL,
     auctionId int AUTO_INCREMENT PRIMARY KEY,
     FOREIGN KEY (itemId) references Item (itemId)
-    
 ) ;
 
 -- Table Structure for Bid -- 
