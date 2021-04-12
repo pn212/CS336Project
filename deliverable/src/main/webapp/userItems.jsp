@@ -36,7 +36,7 @@ public String createRow(Integer itemId, Connection conn) throws SQLException {
 			String catType = rs2.getString("catName");
 			String attrName = rs2.getString("name");
 			String attrVal = rs2.getString("attributeValue");
-			result += "Subcategory= " + catType + "; Attributes: "   + attrName +  " =  " + attrVal + ", ";
+			result += "Subcategory = " + catType + "; Attributes: "   + attrName +  " =  " + attrVal + ", ";
 			catAssigned = true;
 		}
 		else{
