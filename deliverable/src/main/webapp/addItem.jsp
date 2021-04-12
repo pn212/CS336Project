@@ -22,6 +22,50 @@ public boolean emptyFields(ArrayList<String> Attributes, HttpServletRequest requ
 		
 	return false;
 }
+
+public boolean invalidFieldLength(ArrayList<String> Attributes, HttpServletRequest request){
+	final int MAX_NAME_LEN = 100;
+	final int MAX_ATTR_LEN = 100;
+	if(request.getParameter("itemName") == null ||  
+		request.getParameter("itemName").length() > MAX_NAME_LEN){
+		return true;
+	}
+	for(String field: Attributes){
+		if(request.getParameter(field) == null || request.getParameter(field).length() > MAX_ATTR_LEN){
+			return true;
+		}
+	}
+	return false;
+}
+
+public boolean invalidFieldType(ArrayList<String> Attributes, ArrayList<String> Domains, HttpServletRequest request){
+	
+	for(int i = 0; i < Attributes.size(); i++){
+		String attrVal = request.getParameter(Attributes.get(i));
+		if(Domains.get(i).equals("int")){
+			try{
+				Integer val = Integer.parseInt(attrVal);
+			} catch(NumberFormatException e){
+				return true;
+			}	
+		}
+		if(Domains.get(i).equals("double")){
+			try{
+				Double val = Double.parseDouble(attrVal);
+			} catch(NumberFormatException e){
+				return true;
+			}
+		}
+		if(Domains.get(i).equals("boolean")){
+			if(!attrVal.toLowerCase().equals("true") && !attrVal.toLowerCase().equals("false")){
+				return true;
+			}
+		}
+	}
+	
+	return false;
+	
+}
 %>
 <%
 try{
@@ -60,7 +104,7 @@ try{
 	if(subCatType == null || subCatType.isEmpty()){
 		response.sendRedirect("itemSubCat.jsp");
 	}
-	String str1 = "SELECT name from AttributeName where catname = ? ";
+	String str1 = "SELECT name, domain FROM AttributeName WHERE catname = ? ";
 	PreparedStatement ps = conn.prepareStatement(str1);
 	ps.setString(1, subCatType);
 	ResultSet rs = ps.executeQuery();
@@ -68,8 +112,10 @@ try{
 	// move attribute names to arraylist
 	
 	ArrayList<String> attributes = new ArrayList<String>();
+	ArrayList<String> domains = new ArrayList<String>();
 	while(rs.next()){
 		attributes.add(rs.getString("name"));
+		domains.add(rs.getString("domain"));
 	}
 	
 	// check if attributes have been filled out
@@ -77,10 +123,27 @@ try{
 		%>
 	
 		<form id = "errorRedirect" method = "post" action = "enterItemInfo.jsp?error=emptyFields"  >
-		<input type = "hidden" name = "subcat" value = "<%= subCatType %>" >
+			<input type = "hidden" name = "subcat" value = "<%= subCatType %>" >
 		</form>
 		<script>document.getElementById("errorRedirect").submit();</script>
 		<% 	
+	}
+	else if(invalidFieldLength(attributes, request)){
+		%>
+		<form id = "fieldLengthRedirect" method = "post" action = "enterItemInfo.jsp?error=invalidFieldLength">
+			<input type = "hidden" name = "subcat" value = "<%= subCatType %>" >
+		</form>
+		<script>document.getElementById("fieldLengthRedirect").submit();</script>
+		<% 
+	}
+	else if(invalidFieldType(attributes, domains, request)){
+		%>
+		<form id = "fieldTypeRedirect" method = "post" action = "enterItemInfo.jsp?error=invalidFieldType">
+			<input type = "hidden" name = "subcat" value = "<%= subCatType %>" >
+		</form>
+		<script>document.getElementById("fieldTypeRedirect").submit();</script>
+		
+		<%
 	}
 	else{
 		// add item to items table

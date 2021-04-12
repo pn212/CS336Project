@@ -68,8 +68,21 @@ try{
 	
 	<% 
 	String error = request.getParameter("error");
-	if(error != null && error.equals("emptyFields")){
-		out.print("<span>Please fill out all fields</span>");
+	if(error != null){
+		if(error.equals("emptyFields")){
+			out.print("<span>Please fill out all fields</span>");
+		}
+		if(error.equals("invalidFieldLength")){
+			out.print("<span>Invalid fields:</span>");
+			out.print("<br>");
+			out.print("<span>Please keep name length <= 50 and attribute length <= 100</span>");
+		}
+		if(error.equals("invalidFieldType")){
+			out.print("<span>Invalid fields:</span>");
+			out.print("<br>");
+			out.print("<span>Please fill out fields with their proper type</span>");
+		}
+			
 	}
 } catch(Exception e){
 	out.print(e);
