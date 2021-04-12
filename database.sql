@@ -132,6 +132,8 @@ CREATE TABLE SubCategoryType (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
+-- domain is to store the type of attribute
+-- domain can be 'int', 'string', 'double', or 'boolean'
 DROP TABLE IF EXISTS AttributeName;
 CREATE TABLE AttributeName (
 	`name` varchar(50) NOT NULL,
@@ -148,7 +150,6 @@ INSERT INTO SubCategoryType (`name`)
 VALUES ('Car'), ('Bike'), ('Bus');
 /*!40000 ALTER TABLE SubCategoryType ENABLE KEYS */;
 UNLOCK TABLES;
-
 
 LOCK TABLES AttributeName WRITE;
 /*!40000 ALTER TABLE AttributeName DISABLE KEYS */;
