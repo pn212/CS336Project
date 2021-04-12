@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1" import="com.cs336.pkg.*"%>
 <%@ page import="java.io.*,java.util.*,java.sql.*"%>
+<%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="javax.servlet.http.*,javax.servlet.*"%>
 <!DOCTYPE html>
 <html>
@@ -10,7 +11,7 @@
 </head>
 <body>
 Enter Auction Information:
-
+<br>
 <%
 try{
 	// should not happen
@@ -32,8 +33,28 @@ try{
 		// ask user to fill out auction information
 		
 	   %>
-	   <input type ="number" min = "0.00" step = "0.01">
-	   <input type = "datetime-local" >
+	   <form method ="post" action = "addAuction.jsp">
+	   	<label for = "AuctionName">Auction Name</label>
+	   	<input type ="text" id = "AuctionName" name = "AuctionName">
+	   	<br>
+	   	<label for = "Description">Auction Description</label>
+	   	<input type ="text" id = "Description" name = "Description">
+	   	<br>
+	   	<label for = "minReserve">Minimum Reserve Price</label>
+	   	<input type = "number" id = "minReserve" name = "minReserve" step = "0.01">
+	   	<br>
+	   	<label for = "startPrice">Starting Price</label>
+	   	<input type = "number" id = "startPrice" name = "startPrice" step = "0.01">
+	   	<br>
+	   	<label for= "incPrice">Minimum Bid Amount</label>
+	   	<input type = "number" id = "incPrice" name = "incPrice" step = "0.01">
+	   	<br>
+	   	<label for = "endTime">Auction End</label>
+	   	<input type = "datetime-local" id = "endTime" name = "endTime">
+	   	<br>
+	   	<input type = "submit" value = "Create Auction">
+	   </form>
+
 	   <%
 	}
 	
