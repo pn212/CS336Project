@@ -22,7 +22,7 @@ public String createRow(Integer itemId, Connection conn) throws SQLException {
 	while(rs1.next()){
 		name = rs1.getString("name");
 	}
-	result += itemId + "  " + name + "  ";
+	result += itemId + "  " + "Name: " + name + "  ";
 	
 	// query Item to get a table with Attribute Name and Values as columns
 	
@@ -30,11 +30,21 @@ public String createRow(Integer itemId, Connection conn) throws SQLException {
 	PreparedStatement ps2 = conn.prepareStatement(stmt2);
 	ps2.setInt(1, itemId);
 	ResultSet rs2 = ps2.executeQuery();
+	boolean catAssigned = false;
 	while (rs2.next()){
-		String catType = rs2.getString("catName");
-		String attrName = rs2.getString("name");
-		String attrVal = rs2.getString("attributeValue");
-		result += catType + "  " + attrName + "   " + attrVal;
+		if(!catAssigned){
+			String catType = rs2.getString("catName");
+			String attrName = rs2.getString("name");
+			String attrVal = rs2.getString("attributeValue");
+			result += "Subcategory: " + catType + " Attributes: "   + attrName +  "   " + attrVal;
+			catAssigned = true;
+		}
+		else{
+			String attrName = rs2.getString("name");
+			String attrVal = rs2.getString("attributeValue");
+			result += " "  + attrName +  "   " + attrVal;
+		}
+		
 	}
 	
 	return result;
