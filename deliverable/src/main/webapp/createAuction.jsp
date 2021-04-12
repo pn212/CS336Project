@@ -45,13 +45,13 @@ try{
 	   	<label for = "description">Auction Description</label>
 	   	<input type ="text" id = "description" name = "description">
 	   	<br>
-	   	<label for = "minReserve">Minimum Reserve Price</label>
+	   	<label for = "minReserve">Reserve Price</label>
 	   	<input type = "number" id = "minReserve" name = "minReserve" step = "0.01">
 	   	<br>
 	   	<label for = "startPrice">Starting Price</label>
 	   	<input type = "number" id = "startPrice" name = "startPrice" step = "0.01">
 	   	<br>
-	   	<label for= "incPrice">Minimum Bid Amount</label>
+	   	<label for= "incPrice">Increment Price</label>
 	   	<input type = "number" id = "incPrice" name = "incPrice" step = "0.01">
 	   	<br>
 	   	<label for = "endTime">Auction End</label>

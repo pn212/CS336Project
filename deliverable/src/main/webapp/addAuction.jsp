@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1" import="com.cs336.pkg.*"%>
 <%@ page import="java.io.*,java.util.*,java.sql.*"%>
-<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.text.SimpleDateFormat, java.text.DecimalFormat" %>
 <%@ page import="javax.servlet.http.*,javax.servlet.*"%>
 <!DOCTYPE html>
 <html>
@@ -12,46 +12,31 @@
 <body>
 
 <%!
+final double MAX_AMOUNT = 999999999999999.99;
 
-public boolean validPrice (String price){
-	if(price == null || price.isEmpty()){
-		return false;
-	}
-	int decimalCount = 0;
-	int i = 0;
-	while (i < price.length()){
-		if(!Character.isDigit(price.charAt(i))){
-			if(price.charAt(i) == '.'){
-				decimalCount++;
-				break;
-			}
-			return false;
-		}
-		i++;
-	}
-	if (decimalCount != 1){
-		return false;
-	}
-	
-	i++;
-	int centCount = 0;
-	while(i < price.length()){
-		if(!Character.isDigit(price.charAt(i))){
-			return false;
-		}
-		i++;
-		centCount++;
-	}
-	
-	if (centCount != 2){
-		return false;
-	}
-	
+public double getPrice(String price) {
 	double amount = Double.parseDouble(price);
-	if(amount < 0){
+	System.out.println(amount);
+	DecimalFormat df = new DecimalFormat("#.##");
+    amount = Double.parseDouble(df.format(amount));
+    return amount;
+}
+
+public boolean isValidPrice (String price){
+	if(price == null){
 		return false;
 	}
-	return true;
+	price = price.trim();
+	if (price.isEmpty()) {
+		return false;
+	}
+	
+	try {
+		double amount = getPrice(price);
+		return amount >= 0 && amount <= MAX_AMOUNT;
+	} catch (NumberFormatException e) {
+		return false;	
+	}
 }
 
 %>
@@ -114,7 +99,7 @@ try{
 	String incPrice = request.getParameter("incPrice");
 	String endTime = request.getParameter("endTime");
 	
-	if(!validPrice(minPrice) || !validPrice(startPrice) || !validPrice(incPrice) ){
+	if (!isValidPrice(minPrice) || !isValidPrice(startPrice) || !isValidPrice(incPrice) || getPrice(incPrice) <= 0){
 		%>
 		<form id = "invalidPrice" method = "post" action = "createAuction.jsp?error=invalidPrice">
 			<input type = "hidden" name = "items" value = "<%=itemId %>">
@@ -133,9 +118,9 @@ try{
 	else {
 		// make information provided compatible data types with SQL insert
 		
-		double minimumPrice = Double.parseDouble(minPrice);
-		double startingPrice = Double.parseDouble(startPrice);
-		double incrementPrice = Double.parseDouble(incPrice);
+		double minimumPrice = getPrice(minPrice);
+		double startingPrice = getPrice(startPrice);
+		double incrementPrice = getPrice(incPrice);
 		
 		String endingDate = endTime.replace('T', ' ');
 		endingDate += ":00"; 
