@@ -48,6 +48,7 @@ try{
 	db.closeConnection(conn);
 	%>
 	
+	Item Type: <%out.print(subCatType); %>
 	
 	<form method= "post" action = "addItem.jsp" >
 	<label for="itemName" >Item Name</label>

@@ -87,9 +87,26 @@ try{
 	}
 	Integer auctionId = Integer.parseInt(auctionID);
 	
+	
+	
+	
 	//Get the database connection
 	ApplicationDB db = new ApplicationDB();	
 	Connection conn = db.getConnection();
+	
+	// query auction table to make sure user can't bid on their own auction
+	String getSeller = "SELECT i.userId userId FROM Auction a, Item i WHERE a.itemId = i.itemId AND a.itemId = (SELECT itemId FROM Auction WHERE auctionId = ?)";
+	PreparedStatement auctionGS = conn.prepareStatement(getSeller);
+	auctionGS.setInt(1, auctionId);
+	ResultSet auctionRS = auctionGS.executeQuery();
+	if(!auctionRS.next()){
+		response.sendRedirect("account.jsp");
+	}
+	else{
+		if(auctionRS.getInt("userId") == userId){
+			response.sendRedirect("account.jsp");
+		}
+	}
 	
 	// query to get highest auction bid (may change after insert)
 	String getCurrentMax = "SELECT amount FROM Bid WHERE auctionId = ? AND amount IN (SELECT max(amount) FROM Bid WHERE auctionId = ? GROUP BY auctionId)";
