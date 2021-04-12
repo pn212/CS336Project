@@ -22,6 +22,11 @@ try{
 		response.sendRedirect("index.jsp?error=failed");
 	}
 	
+	String userTable = (String) session.getAttribute("userTable");
+	if (userTable == null || !userTable.equals("endUser")){
+		response.sendRedirect("account.jsp");
+	}
+	
 	// Query the subcategory type names from the SubCategory table
 	
 	String str = "SELECT name from SubCategoryType";
@@ -42,14 +47,17 @@ try{
 	
 	<form method="post" action = "enterItemInfo.jsp">
 	<%
-	for(String catName: subCatList){
+	for(int i = 0; i < subCatList.size(); i++){
+		String catName = subCatList.get(i);
 	%>
-		<input type = "radio" id= <%=catName %> name = "subcat" value = <%=catName %> >
+		<input type = "radio" id= <%=catName %> name = "subcat" value = <%=catName %> 
+		<% if (i == 0) out.print("checked"); %> >
 		<label for = <%=catName %>><%=catName %></label>
 		<br>
 		
 		 <% 
 	}
+	
 	
 
 	%>
