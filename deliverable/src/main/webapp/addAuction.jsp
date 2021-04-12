@@ -57,6 +57,10 @@ public boolean validPrice (String price){
 %>
 <%
 try{
+	
+	final int MAX_AUCTION_NAME_LEN = 100;
+	final int MAX_DESCRIPTION_LEN = 1000;
+	
 	// should not happen
 	if(session == null){
 		response.sendRedirect("index.jsp");
@@ -80,11 +84,11 @@ try{
 	
 	// error check for empty auction name
 	String auctionName = request.getParameter("auctionName");
-	if(auctionName == null || auctionName.isEmpty()){
+	if(auctionName == null || auctionName.isEmpty() || auctionName.length() > MAX_AUCTION_NAME_LEN){
 		%>
-		<form id = "noName" method = "post" action = "createAuction.jsp?error=noName">
+		<form id = "invalidName" method = "post" action = "createAuction.jsp?error=invalidName">
 			<input type = "hidden" name = "items" value = "<%=itemId %>">
-			<script>document.getElementById("noName").submit();</script>
+			<script>document.getElementById("invalidName").submit();</script>
 		</form>
 		<%
 	}
@@ -93,6 +97,16 @@ try{
 	if(description == null){
 		description = "";
 	}
+	// error check for description length
+	if(description.length() > MAX_DESCRIPTION_LEN){
+		%>
+		<form id = "invalidDescription" method = "post" action = "createAuction.jsp?error=invalidDescription">
+			<input type = "hidden" name = "items" value = "<%=itemId %>">
+			<script>document.getElementById("invalidDescription").submit();</script>
+		</form>
+		<%
+	}
+	
 	
 	// check if prices are valid
 	String minPrice = request.getParameter("minReserve");

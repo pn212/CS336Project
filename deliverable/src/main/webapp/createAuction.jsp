@@ -55,7 +55,7 @@ try{
 	   	<input type = "number" id = "incPrice" name = "incPrice" step = "0.01">
 	   	<br>
 	   	<label for = "endTime">Auction End</label>
-	   	<input type = "datetime-local" id = "endTime" name = "endTime">
+	   	<input type = "datetime-local" id = "endTime" name = "endTime" required>
 	   	<br>
 	   	<script>
 		   	var today = new Date();
@@ -80,8 +80,12 @@ try{
 	   String error = request.getParameter("error");
 	   
 	   if(error != null){
-		   if(error.equals("noName")){
-			   out.print("<span> Please Enter an Auction Name </span>");
+		   if(error.equals("invalidName")){
+			   out.print("<span> Please Enter a Valid Auction Name </span>");
+			   out.print("<br>");
+		   }
+		   if(error.equals("invalidDescription")){
+			   out.print("<span> Please Enter a Valid Description</span>");
 			   out.print("<br>");
 		   }
 		   if(error.equals("invalidPrice")){
