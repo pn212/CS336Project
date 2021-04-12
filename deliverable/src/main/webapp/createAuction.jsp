@@ -78,12 +78,29 @@ try{
 	   <%
 	   
 	   String error = request.getParameter("error");
+	   
 	   if(error != null){
 		   if(error.equals("noName")){
 			   out.print("<span> Please Enter an Auction Name </span>");
 			   out.print("<br>");
 		   }
+		   if(error.equals("invalidPrice")){
+	   			out.print("<span> Please Enter Valid Prices </span>");
+				out.print("<br>");
+		   }
+		   if(error.equals("invalidDate")){
+	   			out.print("<span> Please Select a Valid Date </span>");
+				out.print("<br>");
+	   		}
+		   /*
+		   if(error.equals("printDate")){
+			   out.print("<span>" + request.getParameter("date") + "</span>");
+			   out.print("<br>");
+		   } */
+		   
 	   }
+	   
+	   
 	}
 	
 } catch(Exception e){

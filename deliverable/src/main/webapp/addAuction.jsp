@@ -12,7 +12,7 @@
 <body>
 
 <%!
-/*
+
 public boolean validPrice (String price){
 	if(price == null || price.isEmpty()){
 		return false;
@@ -47,9 +47,13 @@ public boolean validPrice (String price){
 		return false;
 	}
 	
+	double amount = Double.parseDouble(price);
+	if(amount < 0){
+		return false;
+	}
 	return true;
 }
-*/
+
 %>
 <%
 try{
@@ -68,16 +72,17 @@ try{
 	}
 	
 	// should not be null
-	String itemId = request.getParameter("itemId");
-	if(itemId == null || itemId.isEmpty()){
+	String itemID = request.getParameter("itemId");
+	if(itemID == null || itemID.isEmpty()){
 		response.sendRedirect("userItems.jsp");
 	}
+	Integer itemId = Integer.parseInt(itemID);
 	
 	// error check for empty auction name
 	String auctionName = request.getParameter("auctionName");
 	if(auctionName == null || auctionName.isEmpty()){
 		%>
-		<form id = "noName"method = "post" action = "createAuction.jsp?error=noName">
+		<form id = "noName" method = "post" action = "createAuction.jsp?error=noName">
 			<input type = "hidden" name = "items" value = "<%=itemId %>">
 			<script>document.getElementById("noName").submit();</script>
 		</form>
@@ -90,15 +95,69 @@ try{
 	}
 	
 	// check if prices are valid
-	String minPrice = request.getParameter("minPrice");
+	String minPrice = request.getParameter("minReserve");
 	String startPrice = request.getParameter("startPrice");
 	String incPrice = request.getParameter("incPrice");
 	String endTime = request.getParameter("endTime");
 	
-	// use information provided to add to the auction table
+	if(!validPrice(minPrice) || !validPrice(startPrice) || !validPrice(incPrice) ){
+		%>
+		<form id = "invalidPrice" method = "post" action = "createAuction.jsp?error=invalidPrice">
+			<input type = "hidden" name = "items" value = "<%=itemId %>">
+ 			<script>document.getElementById("invalidPrice").submit();</script>
+		</form>
+		<%
+	}
 	
+	if(endTime == null){
+		%>
+		<form id = "invalidDate" method = "post" action = "createAuction.jsp?error=invalidDate">
+			<input type = "hidden" name = "items" value = "<%=itemId %>">
+			<script>document.getElementById("invalidDate").submit();</script>
+		</form>
+		<%
+	}
 	
+	// make information provided compatible data types with SQL insert
 	
+	double minimumPrice = Double.parseDouble(minPrice);
+	double startingPrice = Double.parseDouble(startPrice);
+	double incrementPrice = Double.parseDouble(incPrice);
+	
+	String endingDate = endTime.replace('T', ' ');
+	endingDate += ":00"; 
+	
+	//Get the database connection
+	ApplicationDB db = new ApplicationDB();	
+	Connection conn = db.getConnection();
+		
+	if (conn == null) {
+		System.out.println("Could not connect to database");
+		out.print("Could not connect to database");
+		response.sendRedirect("index.jsp?error=failed");
+	}
+	
+	// find string for current datetime
+	SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-dd hh:mm:ss");
+	String startingDate = format.format(new java.util.Date());
+	
+			
+	// insert into auction table
+	String stmt = "INSERT into Auction (auctionName, description, minPrice," + 
+			"startPrice, incPrice, startingDateTime, endingDateTime, itemId) VALUES (?,?,?,?,?,?,?,?)";
+	PreparedStatement ps = conn.prepareStatement(stmt);
+	ps.setString(1, auctionName);
+	ps.setString(2, description);
+	ps.setDouble(3, minimumPrice);
+	ps.setDouble(4, startingPrice);
+	ps.setDouble(5, incrementPrice);
+	ps.setString(6, startingDate);
+	ps.setString(7, endingDate);
+	ps.setInt(8, itemId);
+	ps.executeUpdate();
+	
+	db.closeConnection(conn);
+	response.sendRedirect("account.jsp");
 	
 	
 } catch(Exception e){
