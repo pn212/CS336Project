@@ -197,7 +197,7 @@ CREATE TABLE Bid (
     FOREIGN KEY (auctionId) references Auction (auctionId),
     FOREIGN KEY (userId) references endUser (userId)
 );
-
+/*
 -- Table Structure for AlertSettings --
 DROP TABLE IF EXISTS AlertSettings;
 CREATE TABLE AlertSettings (
@@ -205,6 +205,7 @@ CREATE TABLE AlertSettings (
     userId int,
     FOREIGN KEY (userId) references endUser (userId)
 );
+*/
 
 -- Table Structure for AutoBid --
 DROP TABLE IF EXISTS AutoBid;
@@ -216,7 +217,7 @@ CREATE TABLE AutoBid (
     FOREIGN KEY (userId) references endUser (userId),
     FOREIGN KEY (auctionId) references Auction (auctionId)
 );
-
+/*
 DROP TABLE IF EXISTS Alert;
 CREATE TABLE Alert (
 	alertSettingsId int,
@@ -224,6 +225,15 @@ CREATE TABLE Alert (
     PRIMARY KEY(alertSettingsId, auctionId),
     FOREIGN KEY (alertSettingsId) references AlertSettings (alertSettingsId),
     FOREIGN KEY (auctionId) references Auction (auctionId)
+);
+*/
+DROP TABLE IF EXISTS Alert;
+CREATE TABLE Alert(
+	alertId int AUTO_INCREMENT primary key,
+    userId int,
+    alertMessage varchar(1000),
+    alertDateTime datetime,
+    foreign key (userId) references endUser (userId)
 );
 
 DROP TABLE IF EXISTS ItemAttribute;
@@ -238,6 +248,7 @@ CREATE TABLE ItemAttribute (
     
 );
 
+/*
 DROP TABLE IF EXISTS UserHasAlert;
 CREATE TABLE UserHasAlert (
     alertSettingsId int,
@@ -246,7 +257,8 @@ CREATE TABLE UserHasAlert (
     FOREIGN KEY (alertSettingsId) references AlertSettings (alertSettingsId),
     FOREIGN KEY (userId) references endUser (userId)
 );
-
+*/
+/*
 DROP TABLE IF EXISTS AlertForAttributeName;
 CREATE TABLE AlertForAttributeName (
     alertSettingsId int,
@@ -257,6 +269,7 @@ CREATE TABLE AlertForAttributeName (
     FOREIGN KEY (alertSettingsId) references AlertSettings (alertSettingsId),
     FOREIGN KEY (`name`, catName) references AttributeName (`name`, catName)
 );
+*/
 
 
 
