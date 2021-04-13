@@ -100,7 +100,7 @@ try{
 			// query to insert into bids table
 			String stmt = "INSERT into Bid(amount, bidDateTime, auctionId, userId) VALUES(?,?,?,?)";
 			PreparedStatement ps = conn.prepareStatement(stmt);
-			ps.setDouble(1, bidAmount);
+			ps.setDouble(1, Prices.getPrice(bid));
 			ps.setString(2, currDateTime);
 			ps.setInt(3, auctionId);
 			ps.setInt(4, userId);
@@ -116,7 +116,7 @@ try{
 			while (auctionRB.next()){
 				buyerIds.add(auctionRB.getString("userId"));
 			}
-			String alertMessage = "A user has placed a new higher bid of " + bidAmount + " in auction: " + auctionName;
+			String alertMessage = "A user has placed a new higher bid of " + bidAmount + " on auction: " + auctionName;
 			for(int i = 0; i < buyerIds.size(); i++){
 				String buyerID = buyerIds.get(i);
 				Integer buyerId = Integer.parseInt(buyerID);
@@ -148,7 +148,7 @@ try{
 	
 	// no bids yet
 	if(!auctionRM.next()){
-		out.print("The Current Auction Has No Bids Placed, The Starting Price is: " + startPrice);
+		out.print("The Current Auction Has No Bids Placed, The Starting Price is: " + auctionRR.getString("startPrice"));
 		out.print("<br>");
 	}
 	// current highest bid
