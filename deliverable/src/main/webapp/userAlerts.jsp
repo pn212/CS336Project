@@ -57,45 +57,63 @@ try{
 		ps.setInt(2, 0);
 	}
 	else{
-		stmt = "SELECT alertMessage, alertDateTime FROM Alert WHERE userId = ? ORDER BY alertDateTime DESC";
+		stmt = "SELECT alertId, alertMessage, alertDateTime FROM Alert WHERE userId = ? ORDER BY alertDateTime DESC";
 		ps = conn.prepareStatement(stmt);
 		ps.setInt(1, userId);
 	}
 	ResultSet rs = ps.executeQuery();
 	ArrayList<String> alerts = new ArrayList<String>();
 	ArrayList<String> dates = new ArrayList<String>();
+	ArrayList<String> ids = new ArrayList<String>();
 	while (rs.next()){
 		alerts.add(rs.getString("alertMessage"));
 		dates.add(rs.getString("alertDateTime"));
+		ids.add(rs.getString("alertId"));
 	}
-	
-	%>
-	
-	<table>
-	<tr>
-		<td>Message</td>
-		<td>Date and Time</td>
-	</tr>
-		<%
-		for (int i = 0; i < alerts.size(); i++){
-			out.print("<tr>");
-			out.print("<td>");
-			out.print(alerts.get(i));
-			out.print("</td>");
-			out.print("<td>");
-			out.print(dates.get(i));
-			out.print("</td>");
-			out.print("</tr>");
-		}
+	if(ids.size() == 0){
+		out.print("No new alerts to be displayed");
+		out.print("<br>");
+	}
+	else{
 		%>
-	</table>
+		
+		<table>
+		<tr>
+			<td>Message</td>
+			<td>Date and Time</td>
+		</tr>
+			<%
+			for (int i = 0; i < alerts.size(); i++){
+				out.print("<tr>");
+				out.print("<td>");
+				out.print(alerts.get(i));
+				out.print("</td>");
+				out.print("<td>");
+				out.print(dates.get(i));
+				out.print("</td>");
+				out.print("</tr>");
+			}
+			%>
+		</table>
+		<%
+		for(int i = 0; i < ids.size(); i++){
+			String update = "UPDATE Alert SET alertRead = ? WHERE alertId = ?";
+			PreparedStatement updateStmt = conn.prepareStatement(update);
+			updateStmt.setInt(1, 1);
+			updateStmt.setString(2, ids.get(i));
+			int status = updateStmt.executeUpdate();
+		}
+		
+		db.closeConnection(conn);
+		
+	} %>
+	
 	<br> <br>
 	<form method = "post" action = "account.jsp">
 		<input type = "submit" value = "Back">
 	</form>
 
 	<%
-	
 	
 } catch (Exception e){
 	out.print(e);

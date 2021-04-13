@@ -233,6 +233,7 @@ CREATE TABLE Alert(
     userId int,
     alertMessage varchar(1000),
     alertDateTime datetime,
+    alertRead bool NOT NULL default false,
     foreign key (userId) references endUser (userId)
 );
 
