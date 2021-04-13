@@ -37,6 +37,23 @@ try{
 	ApplicationDB db = new ApplicationDB();	
 	Connection conn = db.getConnection();
 	
+	// query auction + item table to make sure item has not been sold
+	
+	String getIsSold = "SELECT i.isSold isSold FROM Auction a, Item i WHERE a.itemId = i.itemId AND a.itemId = (SELECT itemId FROM Auction WHERE auctionId = ?)";
+	PreparedStatement auctionGIS = conn.prepareStatement(getIsSold);
+	auctionGIS.setInt(1, auctionId);
+	ResultSet auctionRIS = auctionGIS.executeQuery();
+	if(!auctionRIS.next()){
+		response.sendRedirect("account.jsp");
+		return;
+	}
+	else{
+		if(auctionRIS.getString("isSold").equals("1")){
+			response.sendRedirect("account.jsp");
+			return;
+		}
+	}
+	
 	// query auction table to make sure user can't bid on their own auction
 	String getSeller = "SELECT i.userId userId FROM Auction a, Item i WHERE a.itemId = i.itemId AND a.itemId = (SELECT itemId FROM Auction WHERE auctionId = ?)";
 	PreparedStatement auctionGS = conn.prepareStatement(getSeller);
@@ -51,6 +68,26 @@ try{
 			response.sendRedirect("account.jsp");
 			return;
 		}
+	}
+	
+	// query auction to see if it is unclosed but the current time is > than closing time
+	String getEndTime = "SELECT endingDateTime FROM Auction where auctionId = ?";
+	PreparedStatement auctionEndStmt = conn.prepareStatement(getEndTime);
+	auctionEndStmt.setInt(1, auctionId);
+	ResultSet endTimeRS = auctionEndStmt.executeQuery();
+	endTimeRS.next();
+	String endingTime = endTimeRS.getString("endingDateTime");
+	endingTime = endingTime.substring(0, endingTime.length() - 2);
+	java.util.Date endDate = (new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")).parse(endingTime);
+	//System.out.println((new java.util.Date()).compareTo(endDate));
+	if ((new java.util.Date()).compareTo(endDate) > 0){ // auction is past closing time
+		%>
+		<form id = "setAuctionWinner" method = "post" action = "auctionWinner.jsp">
+			<input type = "hidden" name = "auctionId" value = "<%= auctionId %>">
+		</form>
+		<script>document.getElementById("setAuctionWinner").submit();</script>
+		<%	
+		return;
 	}
 	
 	// query to get highest auction bid (may change after insert)
@@ -159,7 +196,7 @@ try{
 		out.print("<br>");
 	}
 	
-	
+	 
 	%>
 	<form method = "post" action = "placeBid.jsp">
 		<input type = "hidden" name = "auctionId" value = "<%= auctionId %>">

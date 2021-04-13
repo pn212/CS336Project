@@ -51,7 +51,7 @@ try{
 	String stmt = "";
 	PreparedStatement ps = conn.prepareStatement("");
 	if(viewType.equals("viewUnread")){
-		stmt = "SELECT alertMessage, alertDateTime FROM Alert WHERE userId = ? AND alertRead = ? ORDER BY alertDateTime DESC";
+		stmt = "SELECT alertId, alertMessage, alertDateTime FROM Alert WHERE userId = ? AND alertRead = ? ORDER BY alertDateTime DESC";
 		ps = conn.prepareStatement(stmt);
 		ps.setInt(1, userId);
 		ps.setInt(2, 0);
