@@ -67,6 +67,14 @@ try{
 	else{
 		highestBid = auctionRCM.getString("amount");
 	}
+	// query to get auction name
+	String getName = "SELECT auctionName FROM Auction WHERE auctionId = ? ";
+	PreparedStatement auctionGN = conn.prepareStatement(getName);
+	auctionGN.setInt(1, auctionId);
+	ResultSet auctionRN = auctionGN.executeQuery();
+	auctionRN.next();
+	String auctionName = auctionRN.getString("auctionName");
+	
 	// query to get startPrice and incPrice
 	
 	String getRequired = "SELECT startPrice, incPrice from Auction where auctionid = ?";
@@ -84,19 +92,42 @@ try{
 	if(bid != null && !bid.isEmpty()){
 		double bidAmount = Double.parseDouble(bid);
 		
-		if (Prices.isValidPrice(bid) && Prices.isValidBid(bidAmount, startPrice, highestBidAmount, incPrice)){
+		if (Prices.isValidPrice(bid) && Prices.isValidBid(bidAmount, startPrice, highestBidAmount, incPrice)){ // bid entered into Bid table
 			// find string for current datetime
 			SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-dd hh:mm:ss");
-			String bidDateTime = format.format(new java.util.Date());
+			String currDateTime = format.format(new java.util.Date());
 			
 			// query to insert into bids table
 			String stmt = "INSERT into Bid(amount, bidDateTime, auctionId, userId) VALUES(?,?,?,?)";
 			PreparedStatement ps = conn.prepareStatement(stmt);
 			ps.setDouble(1, bidAmount);
-			ps.setString(2, bidDateTime);
+			ps.setString(2, currDateTime);
 			ps.setInt(3, auctionId);
 			ps.setInt(4, userId);
 			int status = ps.executeUpdate();
+			
+			// get all other buyers involved in auction
+			String getBuyers = "SELECT distinct userId FROM Bid WHERE auctionId = ? AND userId <> ?";
+			PreparedStatement auctionGB = conn.prepareStatement(getBuyers);
+			auctionGB.setInt(1, auctionId);
+			auctionGB.setInt(2, userId);
+			ResultSet auctionRB = auctionGB.executeQuery();
+			ArrayList<String> buyerIds = new ArrayList<String>();
+			while (auctionRB.next()){
+				buyerIds.add(auctionRB.getString("userId"));
+			}
+			String alertMessage = "A user has placed a new higher bid of " + bidAmount + " in auction: " + auctionName;
+			for(int i = 0; i < buyerIds.size(); i++){
+				String buyerID = buyerIds.get(i);
+				Integer buyerId = Integer.parseInt(buyerID);
+				String insertAlert = "INSERT into Alert (userId, alertMessage, alertDateTime) VALUES (?, ?, ?)";
+				PreparedStatement auctionIA = conn.prepareStatement(insertAlert);
+				auctionIA.setInt(1, buyerId);
+				auctionIA.setString(2, alertMessage);
+				auctionIA.setString(3, currDateTime);
+				int messageStatus = auctionIA.executeUpdate();
+			}
+			
 		}
 		else{
 			out.print("<span>Please Enter a Valid Bid</span>");
@@ -104,13 +135,6 @@ try{
 		}
 	}
 	
-	// query to get auction name
-	String getName = "SELECT auctionName FROM Auction WHERE auctionId = ? ";
-	PreparedStatement auctionGN = conn.prepareStatement(getName);
-	auctionGN.setInt(1, auctionId);
-	ResultSet auctionRN = auctionGN.executeQuery();
-	auctionRN.next();
-	String auctionName = auctionRN.getString("auctionName");
 	out.print("Place A Bid for Auction: " + auctionName );
 	out.print("<br>");
 	
@@ -151,7 +175,7 @@ try{
 	</form>
 	
 	<%
-	
+	db.closeConnection(conn);
 } catch (Exception e){
 	out.print(e);
 }
