@@ -47,7 +47,7 @@ public class ForumPost {
 				return null;
 			}
 	
-			String str = "select * from ForumPosts";
+			String str = "select * from ForumPost";
 	
 			PreparedStatement stmt = con.prepareStatement(str);
 			
@@ -68,6 +68,8 @@ public class ForumPost {
 			db.closeConnection(con);
 			
 			return posts;
-		} catch(Exception e) { return null; }
+		} catch(Exception e) {
+			return null;
+		}
 	}
 }
