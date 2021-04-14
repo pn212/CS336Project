@@ -39,7 +39,7 @@ try{
 	
 	// error check for empty auction name
 	String auctionName = request.getParameter("auctionName");
-	if(auctionName == null || auctionName.isEmpty() || auctionName.length() > MAX_AUCTION_NAME_LEN){
+	if(auctionName == null || auctionName.trim().isEmpty() || auctionName.length() > MAX_AUCTION_NAME_LEN){
 		%>
 		<form id = "invalidName" method = "post" action = "createAuction.jsp?error=invalidName">
 			<input type = "hidden" name = "items" value = "<%=itemId %>">
