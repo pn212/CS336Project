@@ -66,7 +66,6 @@ CREATE TABLE endUser (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-
 --
 -- Table structure for table `customerSupport`
 --
@@ -83,7 +82,6 @@ CREATE TABLE customerSupport (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-
 --
 -- Dumping data for table `customerSupport`
 --
@@ -94,7 +92,6 @@ INSERT INTO customerSupport (fName, lName, email, pw)
 VALUES ('John', 'Doe', 'john.doe@gmail.com', 'csPassword');
 /*!40000 ALTER TABLE customerSupport ENABLE KEYS */;
 UNLOCK TABLES;
-
 
 --
 -- Table structure for table `administrator`
@@ -111,7 +108,6 @@ CREATE TABLE administrator (
   pw varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
 
 --
 -- Dumping data for table `administrator`
@@ -143,7 +139,6 @@ CREATE TABLE AttributeName (
     PRIMARY KEY (`name`, catName)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-
 LOCK TABLES SubCategoryType WRITE;
 /*!40000 ALTER TABLE SubCategoryType DISABLE KEYS */;
 INSERT INTO SubCategoryType (`name`)
@@ -159,19 +154,17 @@ VALUES ('Wheel Count', 'Car', 'int'), ('Door Count', 'Car', 'int'), ('Color', 'C
 /*!40000 ALTER TABLE AttributeName ENABLE KEYS */;
 UNLOCK TABLES;
 
-
 DROP table if exists Item;
 CREATE TABLE Item (
 	itemId int auto_increment primary key,
 	`name` varchar(100) NOT NULL,
     -- itemStatus = 0 means the item has not been sold --
     -- itemStatus = 1 means the item has been sold --
-    -- itemStaus = 2 means the item had an auction concluded but there was no winner -- 
+    -- itemStatus = 2 means the item had an auction concluded but there was no winner -- 
     itemStatus int NOT NULL default 0,
     userId int NOT NULL,
     FOREIGN KEY (userId) references endUser (userId)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
 
 DROP TABLE IF EXISTS Auction;
 CREATE TABLE Auction (
@@ -199,7 +192,7 @@ CREATE TABLE Bid (
     FOREIGN KEY (auctionId) references Auction (auctionId),
     FOREIGN KEY (userId) references endUser (userId)
 );
-/*
+
 -- Table Structure for AlertSettings --
 DROP TABLE IF EXISTS AlertSettings;
 CREATE TABLE AlertSettings (
@@ -207,7 +200,6 @@ CREATE TABLE AlertSettings (
     userId int,
     FOREIGN KEY (userId) references endUser (userId)
 );
-*/
 
 -- Table Structure for AutoBid --
 DROP TABLE IF EXISTS AutoBid;
@@ -219,16 +211,7 @@ CREATE TABLE AutoBid (
     FOREIGN KEY (userId) references endUser (userId),
     FOREIGN KEY (auctionId) references Auction (auctionId)
 );
-/*
-DROP TABLE IF EXISTS Alert;
-CREATE TABLE Alert (
-	alertSettingsId int,
-    auctionId int,
-    PRIMARY KEY(alertSettingsId, auctionId),
-    FOREIGN KEY (alertSettingsId) references AlertSettings (alertSettingsId),
-    FOREIGN KEY (auctionId) references Auction (auctionId)
-);
-*/
+
 DROP TABLE IF EXISTS Alert;
 CREATE TABLE Alert(
 	alertId int AUTO_INCREMENT primary key,
@@ -251,17 +234,6 @@ CREATE TABLE ItemAttribute (
     
 );
 
-/*
-DROP TABLE IF EXISTS UserHasAlert;
-CREATE TABLE UserHasAlert (
-    alertSettingsId int,
-    userId int,
-    PRIMARY KEY (alertSettingsId, userId),
-    FOREIGN KEY (alertSettingsId) references AlertSettings (alertSettingsId),
-    FOREIGN KEY (userId) references endUser (userId)
-);
-*/
-/*
 DROP TABLE IF EXISTS AlertForAttributeName;
 CREATE TABLE AlertForAttributeName (
     alertSettingsId int,
@@ -272,7 +244,4 @@ CREATE TABLE AlertForAttributeName (
     FOREIGN KEY (alertSettingsId) references AlertSettings (alertSettingsId),
     FOREIGN KEY (`name`, catName) references AttributeName (`name`, catName)
 );
-*/
-
-
 
