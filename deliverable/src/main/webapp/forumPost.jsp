@@ -81,7 +81,7 @@
 		// event is triggered when key on keyboard is lifted
 		searchBar.addEventListener('keyup', function (event) {
 			// get current value of search bar
-			var value = searchBar.value.trim();
+			var value = searchBar.value.trim().toLowerCase();
 			
 			// get all posts
 			var posts = document.getElementsByClassName("post-link");
