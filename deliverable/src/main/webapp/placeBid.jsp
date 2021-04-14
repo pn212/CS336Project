@@ -78,9 +78,8 @@ try{
 	endTimeRS.next();
 	String endingTime = endTimeRS.getString("endingDateTime");
 	endingTime = endingTime.substring(0, endingTime.length() - 2);
-	java.util.Date endDate = (new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")).parse(endingTime);
 	//System.out.println((new java.util.Date()).compareTo(endDate));
-	if ((new java.util.Date()).compareTo(endDate) > 0){ // auction is past closing time
+	if (DateCheck.expiredAuction(endingTime) == 0){ // auction is past closing time
 		%>
 		<form id = "setAuctionWinner" method = "post" action = "auctionWinner.jsp">
 			<input type = "hidden" name = "auctionId" value = "<%= auctionId %>">
