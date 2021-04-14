@@ -55,12 +55,11 @@ try{
 	itemInfoRS.next();
 	String itemName = itemInfoRS.getString("name");
 	
+	
 	// once an auction is over the item can not be resold on the site even if there was no winner
-	String isSoldCmd = "UPDATE Item SET isSold = ? WHERE itemId = ?";
+	String isSoldCmd = "UPDATE Item SET itemStatus = ? WHERE itemId = ?";
 	PreparedStatement isSoldStmt = conn.prepareStatement(isSoldCmd);
-	isSoldStmt.setInt(1, 1);
 	isSoldStmt.setInt(2, itemId);
-	int soldStatus = isSoldStmt.executeUpdate();
 	
 	double minReserve = Prices.getPrice(minPrice);
 	// get highest bid amount from auction/bid tables
@@ -73,13 +72,16 @@ try{
 	String highestBid = "";
 	String alert = "";
 	int winnerId = 0;
+	double highestBidAmount = 0;
 	if (!auctionRHB.next()){ // no bids were placed
 		alert = "No users won the auction: " + auctionName + " for item: " + itemName;
+		isSoldStmt.setInt(1, 2);
 	}else{
 		highestBid = auctionRHB.getString("amount");
-		double highestBidAmount = Prices.getPrice(highestBid);
+		highestBidAmount = Prices.getPrice(highestBid);
 		if (highestBidAmount < minReserve){ // no winners
 			alert = "No users won the auction: " + auctionName + " for item: " + itemName;
+			isSoldStmt.setInt(1,2);
 		}
 		else{
 			winnerId = auctionRHB.getInt("userId");
@@ -90,9 +92,12 @@ try{
 			winnerRS.next();
 			String fname = winnerRS.getString("fname");
 			String lname = winnerRS.getString("lname");
-			alert = fname + " " + lname + " won the auction: " + auctionName + " for item: " + itemName;
+			alert = fname + " " + lname + " won the auction: " + auctionName + " for item: " + itemName + " with a bid of: " + highestBidAmount;
+			isSoldStmt.setInt(1,1);
 		}
 	}
+	// depending on if there was a winner or not execute update
+	int soldStatus = isSoldStmt.executeUpdate();
 	
 	// send alert about auction ending to all buyers
 	// get all other buyers involved in auction
@@ -114,7 +119,7 @@ try{
 		PreparedStatement auctionIA = conn.prepareStatement(insertAlert);
 		auctionIA.setInt(1, buyerId);
 		if(buyerId == winnerId){
-			auctionIA.setString(2, "You won the auction: " + auctionName + " for item: " + itemName);
+			auctionIA.setString(2, "You won the auction: " + auctionName + " for item: " + itemName + " with a bid of: " + highestBidAmount);
 		}
 		else{
 			auctionIA.setString(2, alert);

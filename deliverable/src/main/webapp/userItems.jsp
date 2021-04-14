@@ -81,8 +81,7 @@ try{
 	}
 	
 	// query Item to get all itemIds of items the user owns and are not on auction
-	//String stmt = "SELECT itemId FROM Item WHERE userId = ? and isSold = ? and onAuction = ? order by itemId asc";
-	String stmt = "SELECT itemId FROM Item WHERE userId = ? AND isSold = ? AND itemId NOT IN (SELECT itemId from Auction)";
+	String stmt = "SELECT itemId FROM Item WHERE userId = ? AND itemStatus = ? AND itemId NOT IN (SELECT itemId from Auction) ORDER BY itemId asc";
 	PreparedStatement ps = conn.prepareStatement(stmt);
 	ps.setInt(1, userId);
 	ps.setInt(2, 0);
@@ -137,8 +136,8 @@ try{
 	List of Items on Auction:
 	<br> <br>
 	<%
-	String cmd = "SELECT distinct itemId FROM Item WHERE userId = ? AND isSold = ? AND itemId IN (SELECT  "
-				+ "itemId FROM Auction)";
+	String cmd = "SELECT distinct itemId FROM Item WHERE userId = ? AND itemStatus = ? AND itemId IN (SELECT  "
+				+ "itemId FROM Auction) ORDER BY itemId ASC";
 	PreparedStatement auctionPS = conn.prepareStatement(cmd);
 	auctionPS.setInt(1, userId);
 	auctionPS.setInt(2, 0);

@@ -39,7 +39,7 @@ try{
 	
 	// query auction + item table to make sure item has not been sold
 	
-	String getIsSold = "SELECT i.isSold isSold FROM Auction a, Item i WHERE a.itemId = i.itemId AND a.itemId = (SELECT itemId FROM Auction WHERE auctionId = ?)";
+	String getIsSold = "SELECT i.itemStatus itemStatus FROM Auction a, Item i WHERE a.itemId = i.itemId AND a.itemId = (SELECT itemId FROM Auction WHERE auctionId = ?)";
 	PreparedStatement auctionGIS = conn.prepareStatement(getIsSold);
 	auctionGIS.setInt(1, auctionId);
 	ResultSet auctionRIS = auctionGIS.executeQuery();
@@ -48,7 +48,7 @@ try{
 		return;
 	}
 	else{
-		if(auctionRIS.getString("isSold").equals("1")){
+		if(!auctionRIS.getString("itemStatus").equals("0")){
 			response.sendRedirect("account.jsp");
 			return;
 		}
