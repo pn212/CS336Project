@@ -74,17 +74,29 @@
 	
 	<script>
 	function attachSearch() {
+		// find search bar
 		var searchBar = document.getElementById("search-bar");
+		
+		// attach listener for "keyup" event
+		// event is triggered when key on keyboard is lifted
 		searchBar.addEventListener('keyup', function (event) {
+			// get current value of search bar
 			var value = searchBar.value.trim();
+			
+			// get all posts
 			var posts = document.getElementsByClassName("post-link");
+			
+			// if there is a value
 			if (value) {
+				// show all posts that contain the value
 				for (var i = 0; i < posts.length; i++) {
 					var postText = posts[i].innerText.trim().toLowerCase();
 					posts[i].style.display = postText.indexOf(value) >= 0 ? 'inline' : 'none';
 				}
 			}
+			// if there is no value (empty search bar)
 			else {
+				// display all posts
 				for (var i = 0; i < posts.length; i++) {
 					posts[i].style.display = 'inline';
 				}
