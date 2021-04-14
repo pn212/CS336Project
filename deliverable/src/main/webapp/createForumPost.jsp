@@ -54,7 +54,7 @@
 		}
 
 		String userTable = (String) session.getAttribute("userTable");
-		if (!userTable.toLowerCase().equals("enduser")) {
+		if (!userTable.toLowerCase().equals("enduser") && !parameterMatches(request, "error", "access")) {
 			response.sendRedirect("createForumPost.jsp?error=access");
 			return;
 		}
@@ -89,31 +89,39 @@
 		out.print(e);
 	}
 	%>
-		
-	<h3>Create Forum Post</h3>
-
-	<form action="createForumPost.jsp" method="post">
-		<label for="title">Question</label>
-		<input required maxlength=<%=MAX_TITLE%> id="title" name="title" type="text"/>
-		<br>
-		<label for="description">Description</label>
-		<textarea required maxlength=<%=MAX_DESCRIPTION%> id="description" name="description"></textarea>
-		<br>
-		<input type="submit" value="Submit"/>
-	</form>
-
+	
+	
 	<%
-		if (parameterMatches(request, "error", "toolong")) {
-			%><span>Error: title or description too long</span><%
-		}
-		
-		if (parameterMatches(request, "error", "tooshort")) {
-			%><span>Error: title or description too short</span><%
-		}
-
-		if (parameterMatches(request, "error", "access")) {
-			%><span>This resource is only available to EndUsers</span><%
-		} 
+	if (parameterMatches(request, "error", "access")) {
+		%><span>This resource is only available to EndUsers</span><%
+	}
+	else {
+		%>
+		<h3>Create Forum Post</h3>
+	
+		<form action="createForumPost.jsp" method="post">
+			<label for="title">Question</label>
+			<input required maxlength=<%=MAX_TITLE%> id="title" name="title" type="text"/>
+			<br>
+			<label for="description">Description</label>
+			<textarea required maxlength=<%=MAX_DESCRIPTION%> id="description" name="description"></textarea>
+			<br>
+			<input type="submit" value="Submit"/>
+		</form>
+	
+		<%
+			if (parameterMatches(request, "error", "toolong")) {
+				%><span>Error: title or description too long</span><%
+			}
+			
+			if (parameterMatches(request, "error", "tooshort")) {
+				%><span>Error: title or description too short</span><%
+			}
+		%>
+		<%
+	}
 	%>
+	
+	
 </body>
 </html>
