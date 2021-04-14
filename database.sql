@@ -166,7 +166,7 @@ CREATE TABLE Item (
 	`name` varchar(100) NOT NULL,
     -- itemStatus = 0 means the item has not been sold --
     -- itemStatus = 1 means the item has been sold --
-    -- itemStaus = 2 means the item had an auction concluded but there was no winner -- 
+    -- itemStatus = 2 means the item had an auction concluded but there was no winner -- 
     itemStatus int NOT NULL default 0,
     userId int NOT NULL,
     FOREIGN KEY (userId) references endUser (userId)
