@@ -164,8 +164,10 @@ DROP table if exists Item;
 CREATE TABLE Item (
 	itemId int auto_increment primary key,
 	`name` varchar(100) NOT NULL,
-    isSold bool NOT NULL default false,
-    /*onAuction bool NOT NULL default false,*/
+    -- itemStatus = 0 means the item has not been sold --
+    -- itemStatus = 1 means the item has been sold --
+    -- itemStaus = 2 means the item had an auction concluded but there was no winner -- 
+    itemStatus int NOT NULL default 0,
     userId int NOT NULL,
     FOREIGN KEY (userId) references endUser (userId)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -197,7 +199,7 @@ CREATE TABLE Bid (
     FOREIGN KEY (auctionId) references Auction (auctionId),
     FOREIGN KEY (userId) references endUser (userId)
 );
-
+/*
 -- Table Structure for AlertSettings --
 DROP TABLE IF EXISTS AlertSettings;
 CREATE TABLE AlertSettings (
@@ -205,6 +207,7 @@ CREATE TABLE AlertSettings (
     userId int,
     FOREIGN KEY (userId) references endUser (userId)
 );
+*/
 
 -- Table Structure for AutoBid --
 DROP TABLE IF EXISTS AutoBid;
@@ -216,7 +219,7 @@ CREATE TABLE AutoBid (
     FOREIGN KEY (userId) references endUser (userId),
     FOREIGN KEY (auctionId) references Auction (auctionId)
 );
-
+/*
 DROP TABLE IF EXISTS Alert;
 CREATE TABLE Alert (
 	alertSettingsId int,
@@ -224,6 +227,16 @@ CREATE TABLE Alert (
     PRIMARY KEY(alertSettingsId, auctionId),
     FOREIGN KEY (alertSettingsId) references AlertSettings (alertSettingsId),
     FOREIGN KEY (auctionId) references Auction (auctionId)
+);
+*/
+DROP TABLE IF EXISTS Alert;
+CREATE TABLE Alert(
+	alertId int AUTO_INCREMENT primary key,
+    userId int,
+    alertMessage varchar(1000),
+    alertDateTime datetime,
+    alertRead bool NOT NULL default false,
+    foreign key (userId) references endUser (userId)
 );
 
 DROP TABLE IF EXISTS ItemAttribute;
@@ -238,6 +251,7 @@ CREATE TABLE ItemAttribute (
     
 );
 
+/*
 DROP TABLE IF EXISTS UserHasAlert;
 CREATE TABLE UserHasAlert (
     alertSettingsId int,
@@ -246,7 +260,8 @@ CREATE TABLE UserHasAlert (
     FOREIGN KEY (alertSettingsId) references AlertSettings (alertSettingsId),
     FOREIGN KEY (userId) references endUser (userId)
 );
-
+*/
+/*
 DROP TABLE IF EXISTS AlertForAttributeName;
 CREATE TABLE AlertForAttributeName (
     alertSettingsId int,
@@ -257,6 +272,4 @@ CREATE TABLE AlertForAttributeName (
     FOREIGN KEY (alertSettingsId) references AlertSettings (alertSettingsId),
     FOREIGN KEY (`name`, catName) references AttributeName (`name`, catName)
 );
-
-
-
+*/
