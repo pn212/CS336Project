@@ -45,6 +45,17 @@
 				<a href="forumPost.jsp">View all posts</a>
 				<%
 			}
+			else {
+				// fetch comments and answers
+				// display post
+				
+				%>
+				<span style="font-weight: bold;">Title:</span>
+				<p><%=selectedPost.getTitle()%></p>
+				<span style="font-weight: bold;">Description:</span>
+				<p><%=selectedPost.getDescription()%></p>
+				<%
+			}
 		}
 		else {
 			%>
