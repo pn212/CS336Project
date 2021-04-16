@@ -80,50 +80,56 @@ try{
 		}	
 	}
 	
-	// list all auctions
-	
-	%>
-	<form method = "post">
-	<table>
-		<tr>
-			<td><b>Auction ID</b></td>
-			<td><b>Auction Name</b></td>
-			<td><b>Item Name</b></td>
-			<td><b>Ending Date/Time</b></td>
-		</tr>
-		<br>
-		<%
-			for(int i = 0; i < auctionIds.size(); i++){
-				int auctionId = auctionIds.get(i);
-				String auctionName = auctionNames.get(i);
-				String auctionEnding = auctionEndings.get(i);
-				auctionEnding = auctionEnding.substring(0, auctionEnding.length() - 2);
-				String itemName = itemNames.get(i);
-				%>
-				<tr>
-					<td>
-						<input type = "radio" id = "<%= auctionId%>" name = "auctionId" 
-						value = "<%= auctionId%>" <% if(i == 0) out.print("checked"); %>>
-						<label for = "<%=auctionId %>"><%=auctionId %></label>
-					</td>
-					<td>
-						<% out.print(auctionName); %>
-					</td>
-					<td>
-						<% out.print(itemName); %>
-					</td>
-					<td>
-						<% out.print(auctionEnding); %>
-					</td>
-				</tr>
-				<%
-			}
+	if (auctionIds.size() == 0){
+		out.print("There are no auctions to bid on");
+	}
+	else{
+		// list all auctions
+		
 		%>
-		</table>
-		<input type = "submit" value = "Place Bid" formaction = "placeBid.jsp">
-		<input type = "submit" value = "View Information" formaction = "auctionInformation.jsp">
- 	</form>
+		<form method = "post">
+		<table>
+			<tr>
+				<td><b>Auction ID</b></td>
+				<td><b>Auction Name</b></td>
+				<td><b>Item Name</b></td>
+				<td><b>Ending Date/Time</b></td>
+			</tr>
+			<%
+				for(int i = 0; i < auctionIds.size(); i++){
+					int auctionId = auctionIds.get(i);
+					String auctionName = auctionNames.get(i);
+					String auctionEnding = auctionEndings.get(i);
+					auctionEnding = auctionEnding.substring(0, auctionEnding.length() - 2);
+					String itemName = itemNames.get(i);
+					%>
+					<tr>
+						<td>
+							<input type = "radio" id = "<%= auctionId%>" name = "auctionId" 
+							value = "<%= auctionId%>" <% if(i == 0) out.print("checked"); %>>
+							<label for = "<%=auctionId %>"><%=auctionId %></label>
+						</td>
+						<td>
+							<% out.print(auctionName); %>
+						</td>
+						<td>
+							<% out.print(itemName); %>
+						</td>
+						<td>
+							<% out.print(auctionEnding); %>
+						</td>
+					</tr>
+					<%
+				}
+			%>
+			</table>
+			<input type = "submit" value = "Place Bid" formaction = "placeBid.jsp">
+			<input type = "submit" value = "View Information" formaction = "auctionInformation.jsp">
+	 	</form>
+	 	<% 
+	} %>
 	
+	<br>
 	<a href="account.jsp">Back</a>
 	<%
 	

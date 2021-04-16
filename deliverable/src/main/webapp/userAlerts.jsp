@@ -89,7 +89,7 @@ try{
 				out.print(alerts.get(i));
 				out.print("</td>");
 				out.print("<td>");
-				out.print(dates.get(i));
+				out.print(dates.get(i).substring(0, dates.get(i).length() - 2));
 				out.print("</td>");
 				out.print("</tr>");
 			}

@@ -120,7 +120,7 @@ try{
 		buyerIds.add(auctionRB.getString("userId"));
 	}
 	// find string for current datetime
-	SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-dd hh:mm:ss");
+	SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 	String currDateTime = format.format(new java.util.Date());
 	for(int i = 0; i < buyerIds.size(); i++){
 		String buyerID = buyerIds.get(i);

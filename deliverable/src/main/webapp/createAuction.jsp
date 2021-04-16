@@ -106,6 +106,10 @@ try{
 	   
 	   
 	}
+	%>
+	<br>
+	<a href ="userItems.jsp">Back</a>
+	<%
 	
 } catch(Exception e){
 	out.print(e);
