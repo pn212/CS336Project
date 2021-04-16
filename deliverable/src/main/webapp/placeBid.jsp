@@ -153,7 +153,7 @@ try{
 			while (auctionRB.next()){
 				buyerIds.add(auctionRB.getString("userId"));
 			}
-			String alertMessage = "A user has placed a new higher bid of " + bidAmount + " on auction: " + auctionName;
+			String alertMessage = "A user has placed a new higher bid of $" + Prices.getPrice(bid) + " on auction: " + auctionName;
 			for(int i = 0; i < buyerIds.size(); i++){
 				String buyerID = buyerIds.get(i);
 				Integer buyerId = Integer.parseInt(buyerID);
@@ -185,14 +185,14 @@ try{
 	
 	// no bids yet
 	if(!auctionRM.next()){
-		out.print("The Current Auction Has No Bids Placed, The Starting Price is: " + auctionRR.getString("startPrice"));
+		out.print("The Current Auction Has No Bids Placed, The Starting Price is: $" + auctionRR.getString("startPrice"));
 		out.print("<br>");
 	}
 	// current highest bid
 	else{
 		highestBid = auctionRM.getString("amount");
 		//highestBid = Double.parseDouble(auctionMax);
-		out.print("The Current Highest Bid is: " + highestBid);
+		out.print("The Current Highest Bid is: $" + highestBid);
 		out.print("<br>");
 	}
 	
