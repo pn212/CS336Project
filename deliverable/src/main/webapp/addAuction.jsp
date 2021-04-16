@@ -106,7 +106,7 @@ try{
 		}
 		else {
 			// find string for current datetime
-			SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-dd hh:mm:ss");
+			SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 			String startingDate = format.format(new java.util.Date());
 			
 					

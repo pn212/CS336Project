@@ -43,7 +43,7 @@ try{
 	String stmt = "SELECT a.auctionId auctionId, a.auctionName auctionName," +
 		" a.endingDateTime endingDateTime, i.name itemName, i.itemStatus itemStatus FROM " +
 		"Auction a, Item i WHERE a.itemId = i.itemId AND i.userId <> ? AND i.itemStatus = ? "
-		+ "ORDER BY a.endingDateTime DESC";
+		+ "ORDER BY a.endingDateTime ASC";
 	PreparedStatement ps = conn.prepareStatement(stmt);
 	ps.setInt(1, userId);
 	ps.setInt(2, 0);
