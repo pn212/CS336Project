@@ -27,10 +27,20 @@ try{
 	}
 	Integer auctionId = Integer.parseInt(auctionID);
 	
+	// Get what page called auctionWinner
+	String source = request.getParameter("source");
+	if(source == null || source.trim().isEmpty()){
+		response.sendRedirect("account.jsp");
+	}
 	//Get the database connection
 	ApplicationDB db = new ApplicationDB();	
 	Connection conn = db.getConnection();
 	
+	if (conn == null) {
+		System.out.println("Could not connect to database");
+		out.print("Could not connect to database");
+		response.sendRedirect("index.jsp?error=failed");
+	}
 	
 	// get auction info
 	String auctionInfo = "SELECT auctionName, minPrice, itemId FROM Auction WHERE auctionId = ?";
@@ -128,8 +138,23 @@ try{
 		int messageStatus = auctionIA.executeUpdate();
 	}
 	db.closeConnection(conn);
-	response.sendRedirect("account.jsp");
 	
+	// redirect back to page that called auctionWinner
+	if (source.equals("placeBid")){
+		%>
+		<form id = redirectAuction method = "post" action = "fullAuctionListing.jsp">
+			<input type = "hidden" id = "source" name = "source" value = "<%= source %>">
+			<input type = "hidden" id = "expiredAuction" name = "expiredAuction" value = "<%= auctionName %>">
+			<script>document.getElementById("redirectAuction").submit();</script>
+		</form>
+		<%
+	}
+	else if (source.equals("fullAuctionListing")){
+		response.sendRedirect("fullAuctionListing.jsp");
+	}
+	else if(source.equals("userItems")){
+		response.sendRedirect("userItems.jsp");
+	}
 	
 } catch(Exception e){
 	out.print(e);

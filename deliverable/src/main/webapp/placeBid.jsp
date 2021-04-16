@@ -83,7 +83,8 @@ try{
 		%>
 		<form id = "setAuctionWinner" method = "post" action = "auctionWinner.jsp">
 			<input type = "hidden" name = "auctionId" value = "<%= auctionId %>">
-		</form>
+			<input type = "hidden" name = "source" value = "placeBid">
+ 		</form>
 		<script>document.getElementById("setAuctionWinner").submit();</script>
 		<%	
 		return;

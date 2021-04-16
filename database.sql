@@ -230,8 +230,7 @@ CREATE TABLE ItemAttribute (
     catName varchar(50) NOT NULL,
     PRIMARY KEY (`name`, catName, itemId),
     FOREIGN KEY (`name`, catName) references AttributeName (`name`, catName),
-    FOREIGN KEY(itemId) references Item (itemId)
-    
+    FOREIGN KEY(itemId) references Item (itemId)    
 );
 
 DROP TABLE IF EXISTS AlertForAttributeName;
