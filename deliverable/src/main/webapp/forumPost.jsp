@@ -29,11 +29,11 @@
 	}
 	%>
 	
-	<%
-	ArrayList<ForumPost> forumPosts;
-
-	%><h3>Welcome to the Forum!</h3><%
+	<h3>Welcome to the Forum!</h3>
 	
+	<%
+	
+	ArrayList<ForumPost> forumPosts;
 	if (request.getParameter("postId") != null) {
 		forumPosts = ForumPost.getForumPosts(true);
 		int selectedPostId = parseSelectedId(request);
