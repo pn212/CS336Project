@@ -65,7 +65,7 @@
 			<span style="font-weight: bold;">Description:</span>
 			<span><%=selectedPost.getDescription()%></span>
 			<br>
-			<p style="font-weight: bold;">Replies:</p>
+			<p style="font-weight: bold;">Replies (<%=selectedPost.getReplies().size()%>):</p>
 			<ul class="replies">
 			<%
 				for (ForumReply reply : selectedPost.getReplies()) {
