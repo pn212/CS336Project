@@ -56,11 +56,16 @@
 			// display post
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			%>
+			<span style="font-weight: bold;">Made by:</span>
+			<span>User <%= selectedPost.getUserId()%></span>
+			<br>
 			<span style="font-weight: bold;">Title:</span>
-			<p><%=selectedPost.getTitle()%></p>
+			<span><%=selectedPost.getTitle()%></span>
+			<br>
 			<span style="font-weight: bold;">Description:</span>
-			<p><%=selectedPost.getDescription()%></p>
-			<span style="font-weight: bold;">Replies:</span>
+			<span><%=selectedPost.getDescription()%></span>
+			<br>
+			<p style="font-weight: bold;">Replies:</p>
 			<ul class="replies">
 			<%
 				for (ForumReply reply : selectedPost.getReplies()) {
@@ -69,7 +74,7 @@
 					<li>
 						<span><%= formatter.format(reply.getCreatedAt())%></span>
 						<br>
-						<span style="font-weight: bold;"><%=creator+":"%></span>
+						<span style="font-weight: bold;"><%=creator+" "+reply.getCreatorId()+":"%></span>
 						<span><%=reply.getContent()%></span>
 					</li>
 					<%
