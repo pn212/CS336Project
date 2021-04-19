@@ -122,7 +122,7 @@
 			<label for="description">Description</label>
 			<textarea required maxlength=<%=MAX_DESCRIPTION%> id="description" name="description"></textarea>
 			<br>
-			<input type="submit" value="Submit"/>
+			<input type="submit" value="Create"/>
 		</form>
 	
 		<%
