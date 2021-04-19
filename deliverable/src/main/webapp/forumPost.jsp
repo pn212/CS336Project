@@ -1,12 +1,22 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1" import="com.cs336.pkg.*"%>
-<%@ page import="java.io.*,java.util.*,java.sql.*"%>
+<%@ page import="java.io.*,java.util.*,java.sql.*,java.text.*"%>
 <%@ page import="javax.servlet.http.*,javax.servlet.*"%>
 <!DOCTYPE html>
 <html>
 <head>
 	<meta charset="ISO-8859-1">
 	<title>Auction Site | Account</title>
+	<style>
+	.replies {
+	 	list-style-type: none;
+	 	padding: 0;
+		margin: 0;
+	}
+	.replies > li:not(:last-child) {
+		margin: 0 0 10px 0;
+	}
+	</style>
 </head>
 <body>
 	<%!
@@ -44,12 +54,28 @@
 		}
 		else {
 			// display post
-			
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			%>
 			<span style="font-weight: bold;">Title:</span>
 			<p><%=selectedPost.getTitle()%></p>
 			<span style="font-weight: bold;">Description:</span>
 			<p><%=selectedPost.getDescription()%></p>
+			<span style="font-weight: bold;">Replies:</span>
+			<ul class="replies">
+			<%
+				for (ForumReply reply : selectedPost.getReplies()) {
+					String creator = reply instanceof ForumAnswer ? "Customer Support" : "User";
+					%>
+					<li>
+						<span><%= formatter.format(reply.getCreatedAt())%></span>
+						<br>
+						<span style="font-weight: bold;"><%=creator+":"%></span>
+						<span><%=reply.getContent()%></span>
+					</li>
+					<%
+				}
+			%>
+			</ul>
 			<%
 		}
 	}
