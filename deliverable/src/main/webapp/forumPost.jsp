@@ -78,6 +78,10 @@
 	<%
 	ArrayList<ForumPost> forumPosts;
 	if (request.getParameter("postId") != null) {
+		%>
+		<a href="forumPost.jsp">View all posts</a>
+		<br>
+		<% 
 		forumPosts = ForumPost.getForumPosts(true);
 		int selectedPostId = parseSelectedId(request);
 		ForumPost selectedPost = null;
@@ -91,8 +95,6 @@
 		if (selectedPost == null) {
 			%>
 			<span>This post does not exist</span>
-			<br>
-			<a href="forumPost.jsp">View all posts</a>
 			<%
 		}
 		else {
