@@ -20,65 +20,61 @@
 	%>
 	
 	<%
-	ArrayList<ForumPost> forumPosts = ForumPost.getForumPosts();
+	ArrayList<ForumPost> forumPosts;
 
-	if (forumPosts == null) {
-		%><span>An error occurred</span><%
-	}
-	else {
-		%><h3>Welcome to the Forum!</h3><%
-		
-		if (request.getParameter("postId") != null) {
-			int selectedPostId = parseSelectedId(request);
-			ForumPost selectedPost = null;
-			for (ForumPost post : forumPosts) {
-				if (post.getId() == selectedPostId) {
-					selectedPost = post;
-					break;
-				}
-			}
-			
-			if (selectedPost == null) {
-				%>
-				<span>This post does not exist</span>
-				<br>
-				<a href="forumPost.jsp">View all posts</a>
-				<%
-			}
-			else {
-				// fetch comments and answers
-				// display post
-				
-				%>
-				<span style="font-weight: bold;">Title:</span>
-				<p><%=selectedPost.getTitle()%></p>
-				<span style="font-weight: bold;">Description:</span>
-				<p><%=selectedPost.getDescription()%></p>
-				<%
+	%><h3>Welcome to the Forum!</h3><%
+	
+	if (request.getParameter("postId") != null) {
+		forumPosts = ForumPost.getForumPosts(true);
+		int selectedPostId = parseSelectedId(request);
+		ForumPost selectedPost = null;
+		for (ForumPost post : forumPosts) {
+			if (post.getId() == selectedPostId) {
+				selectedPost = post;
+				break;
 			}
 		}
-		else {
+		
+		if (selectedPost == null) {
 			%>
-			<span>Total Posts: <%=forumPosts.size()%></span>
+			<span>This post does not exist</span>
 			<br>
-			<br>
-			
-			<label for="search-bar">Search:</label>
-			<input id="search-bar" type="text"/>
-			
-			<br>
-			<br>
+			<a href="forumPost.jsp">View all posts</a>
 			<%
-			for (ForumPost forumPost : forumPosts) {
-				%>
-				<div class="post-link">
-					<a href="forumPost.jsp?postId=<%=forumPost.getId()%>">
-						<%=forumPost.getTitle()%>
-					</a>
-					<br>
-				</div>
-				<%
-			}
+		}
+		else {
+			// display post
+			
+			%>
+			<span style="font-weight: bold;">Title:</span>
+			<p><%=selectedPost.getTitle()%></p>
+			<span style="font-weight: bold;">Description:</span>
+			<p><%=selectedPost.getDescription()%></p>
+			<%
+		}
+	}
+	else {
+		forumPosts = ForumPost.getForumPosts(false);
+		%>
+		<span>Total Posts: <%=forumPosts.size()%></span>
+		<br>
+		<br>
+		
+		<label for="search-bar">Search:</label>
+		<input id="search-bar" type="text"/>
+		
+		<br>
+		<br>
+		<%
+		for (ForumPost forumPost : forumPosts) {
+			%>
+			<div class="post-link">
+				<a href="forumPost.jsp?postId=<%=forumPost.getId()%>">
+					<%=forumPost.getTitle()%>
+				</a>
+				<br>
+			</div>
+			<%
 		}
 	}
 	%>
