@@ -35,15 +35,3 @@ public class ForumReply {
 		return content;
 	}
 }
-
-class ForumAnswer extends ForumReply {
-	public ForumAnswer(int id, int postId, int creatorId, Date createdAt, String content) {
-		super(id, postId, creatorId, createdAt, content);
-	}
-}
-
-class ForumComment extends ForumReply {
-	public ForumComment(int id, int postId, int creatorId, Date createdAt, String content) {
-		super(id, postId, creatorId, createdAt, content);
-	}
-}
