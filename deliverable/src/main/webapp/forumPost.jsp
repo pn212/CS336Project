@@ -27,12 +27,55 @@
 			return postId;
 		} catch (NumberFormatException e) { return -1; }
 	}
+	boolean createReply(int postId, int userId, String content, String userTable) {
+		try {
+			ApplicationDB db = new ApplicationDB();	
+			Connection con = db.getConnection();
+	
+			if (con == null) {
+				return false;
+			}
+			
+			String table = userTable.equals("endUser") ? "ForumComment" : "ForumAnswer";
+	
+			String str = String.format("INSERT INTO %s (postId, content, userId) values (?, ?, ?);", table);
+	
+			PreparedStatement stmt = con.prepareStatement(str);
+			stmt.setInt(1, postId);
+			stmt.setString(2, content);
+			stmt.setInt(3, userId);
+			
+			int addUserResult = stmt.executeUpdate();
+			
+			db.closeConnection(con);
+			
+			return true;
+		} catch(Exception e) { 
+			e.printStackTrace();
+			return false; }
+	}
+	final int MAX_REPLY_LENGTH = 1000;
+	%>
+	
+	
+	<%
+	int postId = parseSelectedId(request);
+	if (postId > 0 && request.getParameter("content") != null) {
+		String content = request.getParameter("content");
+		// attempt to add post
+		if (content.length() < MAX_REPLY_LENGTH && session.getAttribute("userId") != null && session.getAttribute("userTable") != null) {
+			String userTable = (String) session.getAttribute("userTable");
+			Integer userId = (Integer) session.getAttribute("userId");
+			if (userTable.equals("endUser") || userTable.equals("customerSupport")) {
+				createReply(postId, userId, content, userTable);
+			}
+		}
+	}
 	%>
 	
 	<h3>Welcome to the Forum!</h3>
 	
 	<%
-	
 	ArrayList<ForumPost> forumPosts;
 	if (request.getParameter("postId") != null) {
 		forumPosts = ForumPost.getForumPosts(true);
@@ -82,6 +125,22 @@
 			%>
 			</ul>
 			<%
+			
+			// display reply box if enduser or customerSupport
+			
+			if (session.getAttribute("userId") != null && session.getAttribute("userTable") != null) {
+				String userTable = (String) session.getAttribute("userTable");
+				if (userTable.equals("endUser") || userTable.equals("customerSupport")) {
+					%>
+					<form action="forumPost.jsp" method="post">
+						<textarea required maxlength=<%=MAX_REPLY_LENGTH%> name="content"></textarea>
+						<br>
+						<input name="postId" value=<%=selectedPost.getId()%> hidden/>
+						<input type="submit" value="Add Reply"/>
+					</form>
+					<%
+				}
+			}
 		}
 	}
 	else {
