@@ -113,6 +113,7 @@
 	else {
 		%>
 		<h3>Create Forum Post</h3>
+		<a href="forumPost.jsp">View existing posts</a>
 	
 		<form action="createForumPost.jsp" method="post">
 			<label for="title">Question</label>

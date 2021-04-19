@@ -74,6 +74,8 @@
 	%>
 	
 	<h3>Welcome to the Forum!</h3>
+	<a href="createForumPost.jsp">Create a new post</a>
+	<br>
 	
 	<%
 	ArrayList<ForumPost> forumPosts;
