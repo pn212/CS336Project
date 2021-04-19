@@ -42,7 +42,7 @@ public class ForumPost {
 				int answerId = answerResults.getInt("answerId");
 				Date answerDate = answerResults.getTimestamp("created_at");
 				String content = answerResults.getString("content");
-				int csId = answerResults.getInt("csId");
+				int csId = answerResults.getInt("userId");
 				answers.add(new ForumAnswer(answerId, postId, csId, answerDate, content));
 			}
 			

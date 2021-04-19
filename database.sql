@@ -270,9 +270,9 @@ CREATE TABLE ForumAnswer (
     postId int NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 	content varchar(1000) NOT NULL,
-	csId int NOT NULL,
+	userId int NOT NULL,
 	PRIMARY KEY (answerId),
-	FOREIGN KEY (csId) references CustomerSupport (userId),
+	FOREIGN KEY (userId) references CustomerSupport (userId),
     FOREIGN KEY (postId) references ForumPost (postId)
 );
 
