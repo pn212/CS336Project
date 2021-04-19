@@ -6,7 +6,7 @@
 <html>
 <head>
 	<meta charset="ISO-8859-1">
-	<title>Auction Site | Account</title>
+	<title>Auction Site | Forum</title>
 	<style>
 	.replies {
 	 	list-style-type: none;
