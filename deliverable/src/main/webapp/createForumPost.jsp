@@ -22,28 +22,40 @@
 		return param != null && param.equals(paramValue);
 	}
 	
-	boolean createForumPost(int userId, String title, String description) {
+	int createForumPost(int userId, String title, String description) {
 		try {
 			ApplicationDB db = new ApplicationDB();	
 			Connection con = db.getConnection();
 	
 			if (con == null) {
-				return false;
+				return -1;
 			}
 	
 			String str = "INSERT INTO ForumPost (userId, title, description) VALUES (?, ?, ?)";
 	
-			PreparedStatement stmt = con.prepareStatement(str);
+			PreparedStatement stmt = con.prepareStatement(str, Statement.RETURN_GENERATED_KEYS);
 			stmt.setInt(1, userId);
 			stmt.setString(2, title);
 			stmt.setString(3, description);
 			
-			int addUserResult = stmt.executeUpdate();
+			int addPostResult = stmt.executeUpdate();
+			
+			if (addPostResult <= 0) {
+				db.closeConnection(con);
+				return -1;
+			}
+			
+			ResultSet postIds = stmt.getGeneratedKeys();
+			
+			int postId = postIds.next() ? postIds.getInt(1) : -1;
 			
 			db.closeConnection(con);
 			
-			return true;
-		} catch(Exception e) { return false; }
+			return postId;
+		} catch(Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
 	}
 	%>
 	<%
@@ -76,12 +88,15 @@
 			
 			Integer userId = (Integer) session.getAttribute("userId");
 			
-			boolean success = createForumPost(userId, title, description);
+			int postId = createForumPost(userId, title, description);
+			boolean success = postId > 0;
 			if (!success) {
 				%><span>An unexpected error occurred</span><%
 			}
 			else {
 				// TODO: redirect to post
+				response.sendRedirect("forumPost.jsp?postId="+postId);
+				return;
 			}
 		}
 	}
