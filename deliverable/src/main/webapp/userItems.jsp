@@ -138,6 +138,7 @@ try{
 	<%
 	String cmd = "SELECT distinct itemId FROM Item WHERE userId = ? AND itemStatus = ? AND itemId IN (SELECT  "
 				+ "itemId FROM Auction) ORDER BY itemId ASC";
+
 	PreparedStatement auctionPS = conn.prepareStatement(cmd);
 	auctionPS.setInt(1, userId);
 	auctionPS.setInt(2, 0);
