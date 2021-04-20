@@ -252,3 +252,38 @@ CREATE TABLE AlertForAttributeName (
     FOREIGN KEY (alertSettingsId) references AlertSettings (alertSettingsId),
     FOREIGN KEY (`name`, catName) references AttributeName (`name`, catName)
 );
+
+DROP TABLE IF EXISTS ForumPost;
+CREATE TABLE ForumPost (
+	postId int auto_increment,
+	title varchar(50) NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+	description varchar(1000) NOT NULL,
+	userId int NOT NULL,
+	PRIMARY KEY (postId),
+	FOREIGN KEY (userId) references EndUser (userId)
+);
+
+DROP TABLE IF EXISTS ForumAnswer;
+CREATE TABLE ForumAnswer (
+	answerId int auto_increment,
+    postId int NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+	content varchar(1000) NOT NULL,
+	userId int NOT NULL,
+	PRIMARY KEY (answerId),
+	FOREIGN KEY (userId) references CustomerSupport (userId),
+    FOREIGN KEY (postId) references ForumPost (postId)
+);
+
+DROP TABLE IF EXISTS ForumComment;
+CREATE TABLE ForumComment (
+	commentId int auto_increment,
+    postId int NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+	content varchar(1000) NOT NULL,
+	userId int NOT NULL,
+	PRIMARY KEY (commentId),
+	FOREIGN KEY (userId) references EndUser (userId),
+    FOREIGN KEY (postId) references ForumPost (postId)
+);
