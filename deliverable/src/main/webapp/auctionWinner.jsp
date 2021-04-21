@@ -102,7 +102,7 @@ try{
 			winnerRS.next();
 			String fname = winnerRS.getString("fname");
 			String lname = winnerRS.getString("lname");
-			alert = fname + " " + lname + " won the auction: " + auctionName + " for item: " + itemName + " with a bid of: " + highestBidAmount;
+			alert = fname + " " + lname + " won the auction: " + auctionName + " for item: " + itemName + " with a bid of: " + Prices.formatPrice(highestBidAmount);
 			isSoldStmt.setInt(1,1);
 		}
 	}
@@ -129,7 +129,7 @@ try{
 		PreparedStatement auctionIA = conn.prepareStatement(insertAlert);
 		auctionIA.setInt(1, buyerId);
 		if(buyerId == winnerId){
-			auctionIA.setString(2, "You won the auction: " + auctionName + " for item: " + itemName + " with a bid of: " + highestBidAmount);
+			auctionIA.setString(2, "You won the auction: " + auctionName + " for item: " + itemName + " with a bid of: $ " + Prices.formatPrice(highestBidAmount));
 		}
 		else{
 			auctionIA.setString(2, alert);

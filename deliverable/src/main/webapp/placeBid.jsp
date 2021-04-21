@@ -78,7 +78,6 @@ try{
 	endTimeRS.next();
 	String endingTime = endTimeRS.getString("endingDateTime");
 	endingTime = endingTime.substring(0, endingTime.length() - 2);
-	//System.out.println((new java.util.Date()).compareTo(endDate));
 	if (DateCheck.expiredAuction(endingTime) == 0){ // auction is past closing time
 		%>
 		<form id = "setAuctionWinner" method = "post" action = "auctionWinner.jsp">
@@ -131,7 +130,7 @@ try{
 		
 		if (Prices.isValidPrice(bid) && Prices.isValidBid(bidAmount, startPrice, highestBidAmount, incPrice)){ // bid entered into Bid table
 			// find string for current datetime
-			SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-dd hh:mm:ss");
+			SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 			String currDateTime = format.format(new java.util.Date());
 			
 			// query to insert into bids table
@@ -153,7 +152,7 @@ try{
 			while (auctionRB.next()){
 				buyerIds.add(auctionRB.getString("userId"));
 			}
-			String alertMessage = "A user has placed a new higher bid of $" + Prices.getPrice(bid) + " on auction: " + auctionName;
+			String alertMessage = "A user has placed a new higher bid of $" + Prices.formatPrice(Prices.getPrice(bid)) + " on auction: " + auctionName;
 			for(int i = 0; i < buyerIds.size(); i++){
 				String buyerID = buyerIds.get(i);
 				Integer buyerId = Integer.parseInt(buyerID);
@@ -185,14 +184,15 @@ try{
 	
 	// no bids yet
 	if(!auctionRM.next()){
-		out.print("The Current Auction Has No Bids Placed, The Starting Price is: $" + auctionRR.getString("startPrice"));
+		String starting = auctionRR.getString("startPrice");
+		out.print("The Current Auction Has No Bids Placed, The Starting Price is: $" + Prices.formatPrice(Prices.getPrice(starting)));
 		out.print("<br>");
 	}
 	// current highest bid
 	else{
 		highestBid = auctionRM.getString("amount");
 		//highestBid = Double.parseDouble(auctionMax);
-		out.print("The Current Highest Bid is: $" + highestBid);
+		out.print("The Current Highest Bid is: $" + Prices.formatPrice(Prices.getPrice(highestBid)));
 		out.print("<br>");
 	}
 	

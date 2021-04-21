@@ -5,11 +5,17 @@ import java.text.DecimalFormat;
 public class Prices {
 	public static final double MAX_AMOUNT = 999999999999999.99;
 
-	public static double getPrice(String price) {
+	public static double getPrice (String price) {
 		double amount = Double.parseDouble(price);
 		DecimalFormat df = new DecimalFormat("#.##");
 	    amount = Double.parseDouble(df.format(amount));
 	    return amount;
+	}
+	
+	public static String formatPrice (double price) {
+		double cutoff = 100.0;
+		price = Math.round(price * cutoff) / cutoff;
+        return String.format("%.2f", price); // cuts the string to display number with two decimal places
 	}
 
 	public static boolean isValidPrice (String price){

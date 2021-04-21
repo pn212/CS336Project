@@ -24,6 +24,7 @@ try{
 	if (source != null && source.equals("placeBid")){
 		String expiredAuction = request.getParameter("expiredAuction");
 		out.print("<span>Auction: " + expiredAuction + " has expired</span>");
+		out.print("<br>");
 	}
 	// Get the database connection
 	ApplicationDB db = new ApplicationDB();	
