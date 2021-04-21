@@ -91,11 +91,13 @@
 		String userTable = (String) session.getAttribute("userTable");
 	
 		if (userTable != null && userTable.equals("endUser")) {
-			%> <br>  <a href = "userItems.jsp">View Items</a> <%
+			%> 
+			<br>  <a href = "userItems.jsp">View Items</a> 
+			<br> <a href = "chooseAlerts.jsp">View Alerts</a>
+			<br> <a href = "fullAuctionListing.jsp">View All Auctions</a>
+			<%
 		}
-	
 	%>
-	
 	<%
 		if (userTable != null && userTable.equals("administrator")) {
 			%> <br> <a href="csAccountCreate.jsp">Customer Service Account Creation</a> <%

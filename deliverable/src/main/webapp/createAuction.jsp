@@ -59,7 +59,7 @@ try{
 	   	<br>
 	   	<script>
 		   	var today = new Date();
-		   	var day = today.getDate() + 1; // auction must last until next day
+		   	var day = today.getDate(); // auction must last until next day
 		   	var month = today.getMonth() + 1;
 		   	var year = today.getFullYear();
 		   	if(day < 10){
@@ -106,6 +106,10 @@ try{
 	   
 	   
 	}
+	%>
+	<br>
+	<a href ="userItems.jsp">Back</a>
+	<%
 	
 } catch(Exception e){
 	out.print(e);

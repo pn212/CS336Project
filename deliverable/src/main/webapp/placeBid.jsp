@@ -37,6 +37,23 @@ try{
 	ApplicationDB db = new ApplicationDB();	
 	Connection conn = db.getConnection();
 	
+	// query auction + item table to make sure item has not been sold
+	
+	String getIsSold = "SELECT i.itemStatus itemStatus FROM Auction a, Item i WHERE a.itemId = i.itemId AND a.itemId = (SELECT itemId FROM Auction WHERE auctionId = ?)";
+	PreparedStatement auctionGIS = conn.prepareStatement(getIsSold);
+	auctionGIS.setInt(1, auctionId);
+	ResultSet auctionRIS = auctionGIS.executeQuery();
+	if(!auctionRIS.next()){
+		response.sendRedirect("account.jsp");
+		return;
+	}
+	else{
+		if(!auctionRIS.getString("itemStatus").equals("0")){
+			response.sendRedirect("account.jsp");
+			return;
+		}
+	}
+	
 	// query auction table to make sure user can't bid on their own auction
 	String getSeller = "SELECT i.userId userId FROM Auction a, Item i WHERE a.itemId = i.itemId AND a.itemId = (SELECT itemId FROM Auction WHERE auctionId = ?)";
 	PreparedStatement auctionGS = conn.prepareStatement(getSeller);
@@ -53,6 +70,25 @@ try{
 		}
 	}
 	
+	// query auction to see if it is unclosed but the current time is > than closing time
+	String getEndTime = "SELECT endingDateTime FROM Auction where auctionId = ?";
+	PreparedStatement auctionEndStmt = conn.prepareStatement(getEndTime);
+	auctionEndStmt.setInt(1, auctionId);
+	ResultSet endTimeRS = auctionEndStmt.executeQuery();
+	endTimeRS.next();
+	String endingTime = endTimeRS.getString("endingDateTime");
+	endingTime = endingTime.substring(0, endingTime.length() - 2);
+	if (DateCheck.expiredAuction(endingTime) == 0){ // auction is past closing time
+		%>
+		<form id = "setAuctionWinner" method = "post" action = "auctionWinner.jsp">
+			<input type = "hidden" name = "auctionId" value = "<%= auctionId %>">
+			<input type = "hidden" name = "source" value = "placeBid">
+ 		</form>
+		<script>document.getElementById("setAuctionWinner").submit();</script>
+		<%	
+		return;
+	}
+	
 	// query to get highest auction bid (may change after insert)
 	String getCurrentMax = "SELECT amount FROM Bid WHERE auctionId = ? AND amount IN (SELECT max(amount) FROM Bid WHERE auctionId = ? GROUP BY auctionId)";
 	PreparedStatement auctionGCM = conn.prepareStatement(getCurrentMax);
@@ -67,6 +103,14 @@ try{
 	else{
 		highestBid = auctionRCM.getString("amount");
 	}
+	// query to get auction name
+	String getName = "SELECT auctionName FROM Auction WHERE auctionId = ? ";
+	PreparedStatement auctionGN = conn.prepareStatement(getName);
+	auctionGN.setInt(1, auctionId);
+	ResultSet auctionRN = auctionGN.executeQuery();
+	auctionRN.next();
+	String auctionName = auctionRN.getString("auctionName");
+	
 	// query to get startPrice and incPrice
 	
 	String getRequired = "SELECT startPrice, incPrice from Auction where auctionid = ?";
@@ -84,19 +128,42 @@ try{
 	if(bid != null && !bid.isEmpty()){
 		double bidAmount = Double.parseDouble(bid);
 		
-		if (Prices.isValidPrice(bid) && Prices.isValidBid(bidAmount, startPrice, highestBidAmount, incPrice)){
+		if (Prices.isValidPrice(bid) && Prices.isValidBid(bidAmount, startPrice, highestBidAmount, incPrice)){ // bid entered into Bid table
 			// find string for current datetime
-			SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-dd hh:mm:ss");
-			String bidDateTime = format.format(new java.util.Date());
+			SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+			String currDateTime = format.format(new java.util.Date());
 			
 			// query to insert into bids table
 			String stmt = "INSERT into Bid(amount, bidDateTime, auctionId, userId) VALUES(?,?,?,?)";
 			PreparedStatement ps = conn.prepareStatement(stmt);
-			ps.setDouble(1, bidAmount);
-			ps.setString(2, bidDateTime);
+			ps.setDouble(1, Prices.getPrice(bid));
+			ps.setString(2, currDateTime);
 			ps.setInt(3, auctionId);
 			ps.setInt(4, userId);
 			int status = ps.executeUpdate();
+			
+			// get all other buyers involved in auction
+			String getBuyers = "SELECT distinct userId FROM Bid WHERE auctionId = ? AND userId <> ?";
+			PreparedStatement auctionGB = conn.prepareStatement(getBuyers);
+			auctionGB.setInt(1, auctionId);
+			auctionGB.setInt(2, userId);
+			ResultSet auctionRB = auctionGB.executeQuery();
+			ArrayList<String> buyerIds = new ArrayList<String>();
+			while (auctionRB.next()){
+				buyerIds.add(auctionRB.getString("userId"));
+			}
+			String alertMessage = "A user has placed a new higher bid of " + Prices.formatPrice(Prices.getPrice(bid)) + " on auction: " + auctionName;
+			for(int i = 0; i < buyerIds.size(); i++){
+				String buyerID = buyerIds.get(i);
+				Integer buyerId = Integer.parseInt(buyerID);
+				String insertAlert = "INSERT into Alert (userId, alertMessage, alertDateTime) VALUES (?, ?, ?)";
+				PreparedStatement auctionIA = conn.prepareStatement(insertAlert);
+				auctionIA.setInt(1, buyerId);
+				auctionIA.setString(2, alertMessage);
+				auctionIA.setString(3, currDateTime);
+				int messageStatus = auctionIA.executeUpdate();
+			}
+			
 		}
 		else{
 			out.print("<span>Please Enter a Valid Bid</span>");
@@ -104,13 +171,6 @@ try{
 		}
 	}
 	
-	// query to get auction name
-	String getName = "SELECT auctionName FROM Auction WHERE auctionId = ? ";
-	PreparedStatement auctionGN = conn.prepareStatement(getName);
-	auctionGN.setInt(1, auctionId);
-	ResultSet auctionRN = auctionGN.executeQuery();
-	auctionRN.next();
-	String auctionName = auctionRN.getString("auctionName");
 	out.print("Place A Bid for Auction: " + auctionName );
 	out.print("<br>");
 	
@@ -124,18 +184,19 @@ try{
 	
 	// no bids yet
 	if(!auctionRM.next()){
-		out.print("The Current Auction Has No Bids Placed, The Starting Price is: " + startPrice);
+		String starting = auctionRR.getString("startPrice");
+		out.print("The Current Auction Has No Bids Placed, The Starting Price is: " + Prices.formatPrice(Prices.getPrice(starting)));
 		out.print("<br>");
 	}
 	// current highest bid
 	else{
 		highestBid = auctionRM.getString("amount");
 		//highestBid = Double.parseDouble(auctionMax);
-		out.print("The Current Highest Bid is: " + highestBid);
+		out.print("The Current Highest Bid is: " + Prices.formatPrice(Prices.getPrice(highestBid)));
 		out.print("<br>");
 	}
 	
-	
+	 
 	%>
 	<form method = "post" action = "placeBid.jsp">
 		<input type = "hidden" name = "auctionId" value = "<%= auctionId %>">
@@ -151,7 +212,7 @@ try{
 	</form>
 	
 	<%
-	
+	db.closeConnection(conn);
 } catch (Exception e){
 	out.print(e);
 }

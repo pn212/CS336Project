@@ -39,7 +39,7 @@ try{
 	
 	// error check for empty auction name
 	String auctionName = request.getParameter("auctionName");
-	if(auctionName == null || auctionName.isEmpty() || auctionName.length() > MAX_AUCTION_NAME_LEN){
+	if(auctionName == null || auctionName.trim().isEmpty() || auctionName.length() > MAX_AUCTION_NAME_LEN){
 		%>
 		<form id = "invalidName" method = "post" action = "createAuction.jsp?error=invalidName">
 			<input type = "hidden" name = "items" value = "<%=itemId %>">
@@ -77,7 +77,7 @@ try{
 		</form>
 		<%
 	}
-	else if(endTime == null){
+	else if(endTime == null || DateCheck.validCreate(endTime) == 0){
 		%>
 		<form id = "invalidDate" method = "post" action = "createAuction.jsp?error=invalidDate">
 			<input type = "hidden" name = "items" value = "<%=itemId %>">
@@ -106,7 +106,7 @@ try{
 		}
 		else {
 			// find string for current datetime
-			SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-dd hh:mm:ss");
+			SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 			String startingDate = format.format(new java.util.Date());
 			
 					
@@ -133,5 +133,6 @@ try{
 }
 
 %>
+
 </body>
 </html>

@@ -81,7 +81,7 @@ try{
 	}
 	
 	// query Item to get all itemIds of items the user owns and are not on auction
-	String stmt = "SELECT itemId FROM Item WHERE userId = ? AND itemStatus = ? AND itemId NOT IN (SELECT itemId from Auction)";
+	String stmt = "SELECT itemId FROM Item WHERE userId = ? AND itemStatus = ? AND itemId NOT IN (SELECT itemId from Auction) ORDER BY itemId asc";
 	PreparedStatement ps = conn.prepareStatement(stmt);
 	ps.setInt(1, userId);
 	ps.setInt(2, 0);
@@ -92,45 +92,53 @@ try{
 	while(rs.next()){
 		itemIdList.add(rs.getInt("itemId"));
 	}
-	
-	// create an arraylist of strings where each string is a row in the displayed items list
-	ArrayList<String> rows = new ArrayList<String>();
-	for(int i = 0; i < itemIdList.size(); i++){
-		String row = createRow(itemIdList.get(i), conn);
-		rows.add(row);
-	}
-	// make rows a radio button group
-	
-	%>
-	List of Items:
-	<br> <br>
-	ItemId		Item Information
-	<form method = "post" action = "createAuction.jsp">
-	<% 
-	for(int i = 0; i < rows.size(); i++){ 
-		String row = rows.get(i);
-		String itemId = itemIdList.get(i).toString();
+	if(itemIdList.size() == 0){
 		%>
-		<input type ="radio" id = "<%=itemId %>" name = "items" value = "<%=itemId %>"  
-		<%if (i == 0) out.print("checked"); %>>
-		<label for= "<%=itemId %>"> <%=row %> </label>
-		<br>
+		List of Items:
+		<br> <br>
+		You have no items
+		<%
+	}
+	else{
+		// create an arraylist of strings where each string is a row in the displayed items list
+		ArrayList<String> rows = new ArrayList<String>();
+		for(int i = 0; i < itemIdList.size(); i++){
+			String row = createRow(itemIdList.get(i), conn);
+			rows.add(row);
+		}
+		// make rows a radio button group
 		
+		%>
+		List of Items:
+		<br> <br>
+		ItemId		Item Information
+		<form method = "post" action = "createAuction.jsp">
 		<% 
-	} %>
+		for(int i = 0; i < rows.size(); i++){ 
+			String row = rows.get(i);
+			String itemId = itemIdList.get(i).toString();
+			%>
+			<input type ="radio" id = "<%=itemId %>" name = "items" value = "<%=itemId %>"  
+			<%if (i == 0) out.print("checked"); %>>
+			<label for= "<%=itemId %>"> <%=row %> </label>
+			<br>
+			
+			<% 
+		} %>
+		<br>
+		<input type = "submit" value = "Create Auction For Selected Item">
+		</form>
+	<%} %>
+	
 	<br>
-	<input type = "submit" value = "Create Auction For Selected Item">
-	</form>
-	
-	<br> <br> <br>
-	
+	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+	<br>
 	List of Items on Auction:
 	<br> <br>
-	ItemId	Item Information
-	<br>
 	<%
 	String cmd = "SELECT distinct itemId FROM Item WHERE userId = ? AND itemStatus = ? AND itemId IN (SELECT  "
-				+ "itemId FROM Auction)";
+				+ "itemId FROM Auction) ORDER BY itemId ASC";
+
 	PreparedStatement auctionPS = conn.prepareStatement(cmd);
 	auctionPS.setInt(1, userId);
 	auctionPS.setInt(2, 0);
@@ -141,15 +149,27 @@ try{
 	while(auctionRS.next()){
 		itemIdList2.add(auctionRS.getInt("itemId"));
 	}
-	// create an arraylist of strings where each string is a row in the displayed items list
-	ArrayList<String> rows2 = new ArrayList<String>();
-	for(int i = 0; i < itemIdList2.size(); i++){
-		String row2 = createRow(itemIdList2.get(i), conn);
-		rows2.add(row2);
+	if(itemIdList2.size() == 0){
+		%>
+		You have no items that currently have auctions
+		<%
 	}
-	for(int i = 0 ; i < rows2.size(); i++){
-		out.print(rows2.get(i) + "<br>");
+	else{
+		%>
+		ItemId 		Item Information
+		<br>
+		<%
+		// create an arraylist of strings where each string is a row in the displayed items list
+		ArrayList<String> rows2 = new ArrayList<String>();
+		for(int i = 0; i < itemIdList2.size(); i++){
+			String row2 = createRow(itemIdList2.get(i), conn);
+			rows2.add(row2);
+		}
+		for(int i = 0 ; i < rows2.size(); i++){
+			out.print(rows2.get(i) + "<br>");
+		}
 	}
+	
 	
 	// close connection
 	db.closeConnection(conn);

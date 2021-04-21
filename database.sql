@@ -66,7 +66,6 @@ CREATE TABLE endUser (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-
 --
 -- Table structure for table `customerSupport`
 --
@@ -83,7 +82,6 @@ CREATE TABLE customerSupport (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-
 --
 -- Dumping data for table `customerSupport`
 --
@@ -94,7 +92,6 @@ INSERT INTO customerSupport (fName, lName, email, pw)
 VALUES ('John', 'Doe', 'john.doe@gmail.com', 'csPassword');
 /*!40000 ALTER TABLE customerSupport ENABLE KEYS */;
 UNLOCK TABLES;
-
 
 --
 -- Table structure for table `administrator`
@@ -111,7 +108,6 @@ CREATE TABLE administrator (
   pw varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
 
 --
 -- Dumping data for table `administrator`
@@ -143,7 +139,6 @@ CREATE TABLE AttributeName (
     PRIMARY KEY (`name`, catName)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-
 LOCK TABLES SubCategoryType WRITE;
 /*!40000 ALTER TABLE SubCategoryType DISABLE KEYS */;
 INSERT INTO SubCategoryType (`name`)
@@ -159,7 +154,6 @@ VALUES ('Wheel Count', 'Car', 'int'), ('Door Count', 'Car', 'int'), ('Color', 'C
 /*!40000 ALTER TABLE AttributeName ENABLE KEYS */;
 UNLOCK TABLES;
 
-
 DROP table if exists Item;
 CREATE TABLE Item (
 	itemId int auto_increment primary key,
@@ -171,7 +165,6 @@ CREATE TABLE Item (
     userId int NOT NULL,
     FOREIGN KEY (userId) references endUser (userId)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
 
 DROP TABLE IF EXISTS Auction;
 CREATE TABLE Auction (
@@ -208,7 +201,6 @@ CREATE TABLE AlertSettings (
     FOREIGN KEY (userId) references endUser (userId)
 );
 
-
 -- Table Structure for AutoBid --
 DROP TABLE IF EXISTS AutoBid;
 CREATE TABLE AutoBid (
@@ -238,8 +230,7 @@ CREATE TABLE ItemAttribute (
     catName varchar(50) NOT NULL,
     PRIMARY KEY (`name`, catName, itemId),
     FOREIGN KEY (`name`, catName) references AttributeName (`name`, catName),
-    FOREIGN KEY(itemId) references Item (itemId)
-    
+    FOREIGN KEY(itemId) references Item (itemId)    
 );
 
 DROP TABLE IF EXISTS AlertForAttributeName;
@@ -252,6 +243,7 @@ CREATE TABLE AlertForAttributeName (
     FOREIGN KEY (alertSettingsId) references AlertSettings (alertSettingsId),
     FOREIGN KEY (`name`, catName) references AttributeName (`name`, catName)
 );
+
 
 DROP TABLE IF EXISTS ForumPost;
 CREATE TABLE ForumPost (
