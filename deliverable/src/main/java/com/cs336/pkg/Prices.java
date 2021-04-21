@@ -15,7 +15,7 @@ public class Prices {
 	public static String formatPrice (double price) {
 		double cutoff = 100.0;
 		price = Math.round(price * cutoff) / cutoff;
-        return String.format("%.2f", price); // cuts the string to display number with two decimal places
+        return "$" + String.format("%.2f", price); // cuts the string to display number with two decimal places
 	}
 
 	public static boolean isValidPrice (String price){

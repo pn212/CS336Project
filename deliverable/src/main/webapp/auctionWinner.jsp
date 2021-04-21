@@ -129,7 +129,7 @@ try{
 		PreparedStatement auctionIA = conn.prepareStatement(insertAlert);
 		auctionIA.setInt(1, buyerId);
 		if(buyerId == winnerId){
-			auctionIA.setString(2, "You won the auction: " + auctionName + " for item: " + itemName + " with a bid of: $ " + Prices.formatPrice(highestBidAmount));
+			auctionIA.setString(2, "You won the auction: " + auctionName + " for item: " + itemName + " with a bid of: " + Prices.formatPrice(highestBidAmount));
 		}
 		else{
 			auctionIA.setString(2, alert);
