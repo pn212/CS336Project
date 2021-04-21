@@ -98,9 +98,9 @@
 					db.closeConnection(con);
 		%>
 					<form id="loginForm" method="post" action="login.jsp">
-					<input required id="email" type="email" name="email" value="<%=email%>"/>
-					<input required id="password" type="password" name="password" value="<%=password%>"/>
-					<input type="radio" id="endUser" name="userType" value="endUser" checked>
+					<input hidden id="email" type="email" name="email" value="<%=email%>"/>
+					<input hidden id="password" type="password" name="password" value="<%=password%>"/>
+					<input hidden type="radio" id="endUser" name="userType" value="endUser" checked>
 					</form>
 					<script>document.getElementById("loginForm").submit();</script>
 		<% 
