@@ -100,7 +100,10 @@
 	%>
 	<%
 		if (userTable != null && userTable.equals("administrator")) {
-			%> <br> <a href="csAccountCreate.jsp">Customer Service Account Creation</a> <%
+			%> 
+			<br> <a href="csAccountCreate.jsp">Customer Service Account Creation</a>
+			<br> <a href="salesReport.jsp">View Sales Report</a>
+			<%
 		}
 	%>
 
