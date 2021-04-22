@@ -7,6 +7,11 @@
 <head>
 	<meta charset="ISO-8859-1">
 	<title>Auction Site | Sales Report</title>
+	<style>
+		.table-name {
+			font-weight: bold;
+		}
+	</style>
 </head>
 <body>
 	<%
@@ -77,7 +82,110 @@
 				itemTypeEarnings = Generic.getSortedMap(itemTypeEarnings, true);
 
 				%>
-				<p>Total Earnings: <%=Prices.formatPrice(totalEarnings)%></p>
+				<p class="table-name">Total Earnings: <%=Prices.formatPrice(totalEarnings)%></p>
+				
+				<span class="table-name">Seller Earnings</span>
+				<table>
+					<tr>
+						<th>User ID</th>
+						<th>Net Earnings</th>
+					</tr>
+					<%
+					for (int sellerId : sellerEarnings.keySet()) {
+						%>
+						<tr>
+							<td><%=sellerId%></td>
+							<td><%=Prices.formatPrice(sellerEarnings.get(sellerId))%></td>
+						</tr>
+						<%
+					}
+					%>
+				</table>
+				
+				<br/>
+				
+				<span class="table-name">Item Earnings</span>
+				<table>
+					<tr>
+						<th>Item Name</th>
+						<th>Net Earnings</th>
+					</tr>
+					<%
+					for (String itemName : itemEarnings.keySet()) {
+						%>
+						<tr>
+							<td><%=itemName%></td>
+							<td><%=Prices.formatPrice(itemEarnings.get(itemName))%></td>
+						</tr>
+						<%
+					}
+					%>
+				</table>
+				
+				<br/>
+				
+				<span class="table-name">Item Type Earnings</span>
+				<table>
+					<tr>
+						<th>Item Type</th>
+						<th>Net Earnings</th>
+					</tr>
+					<%
+					for (String itemType : itemTypeEarnings.keySet()) {
+						%>
+						<tr>
+							<td><%=itemType%></td>
+							<td><%=Prices.formatPrice(itemTypeEarnings.get(itemType))%></td>
+						</tr>
+						<%
+					}
+					%>
+				</table>
+				
+				<br/>
+				
+				<span class="table-name">Best-Selling Items</span>
+				<table>
+					<tr>
+						<th>Item Type</th>
+						<th>Total Sales</th>
+					</tr>
+					<%
+					for (String itemType : bestItems.keySet()) {
+						%>
+						<tr>
+							<td><%=itemType%></td>
+							<td><%=bestItems.get(itemType)%></td>
+						</tr>
+						<%
+					}
+					%>
+				</table>
+				
+				<br/>
+				
+				<span class="table-name">Best Buyers</span>
+				<table>
+					<tr>
+						<th>User ID</th>
+						<th>Total Auctions Won</th>
+					</tr>
+					<%
+					for (int buyerId : bestBuyers.keySet()) {
+						%>
+						<tr>
+							<td><%=buyerId%></td>
+							<td><%=bestBuyers.get(buyerId)%></td>
+						</tr>
+						<%
+					}
+					%>
+				</table>
+				
+				
+				<br/>
+				
+				<span class="table-name">All Sales</span>
 				<table>
 					<tr>
 						<th>Item Type</th>
@@ -100,8 +208,6 @@
 						</tr>
 						<%
 					}
-					
-					
 					%>
 				</table>
 				
