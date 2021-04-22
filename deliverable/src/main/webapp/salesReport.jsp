@@ -34,9 +34,36 @@
 	
 		if (con != null) {
 			try {
-				ArrayList<String> itemTypes = SalesReport.getItemTypes(con);
-				ArrayList<SoldItem> items = SalesReport.getSoldItems(con);
-				out.print(items.size());
+				ArrayList<String> itemTypes = SoldItem.getItemTypes(con);
+				ArrayList<SoldItem> items = SoldItem.getSoldItems(con);
+				%>
+				
+				<table>
+					<tr>
+						<th>Item Type</th>
+						<th>Item ID</th>
+						<th>Item Name</th>
+						<th>Seller ID</th>
+						<th>Buyer ID</th>
+						<th>Sell Price</th>
+					</tr>
+					<%
+					for (SoldItem item : items) {
+						%>
+						<tr>
+							<td><%=item.getType()%></td>
+							<td><%=item.getId()%></td>
+							<td><%=item.getName()%></td>
+							<td><%=item.getSellerId()%></td>
+							<td><%=item.getBuyerId()%></td>
+							<td><%=Prices.formatPrice(item.getPrice())%></td>
+						</tr>
+						<%
+					}
+					%>
+				</table>
+				
+				<%
 			} catch (SQLException e) {
 				db.closeConnection(con);
 				e.printStackTrace();
