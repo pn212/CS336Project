@@ -42,6 +42,8 @@
 				ArrayList<String> itemTypes = SoldItem.getItemTypes(con);
 				ArrayList<SoldItem> items = SoldItem.getSoldItems(con);
 
+				db.closeConnection(con);
+				
 				// best selling
 				Map<Integer, Integer> bestBuyers = new HashMap<Integer, Integer>();
 				Map<String, Integer> bestItems = new HashMap<String, Integer>();
