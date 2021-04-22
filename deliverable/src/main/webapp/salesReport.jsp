@@ -19,21 +19,21 @@
 			// if user is not an authorized admin, show 404 error
 			if (session.getAttribute("userId") == null || session.getAttribute("userTable") == null) {
 				response.sendError(404, request.getRequestURI());
+				return;
 			}
 			else {
 				String userTable = (String) session.getAttribute("userTable");
 				
 				if (!userTable.equals("administrator")) {
 					response.sendError(404, request.getRequestURI());
+					return;
 				}
 			}
 		}
 		catch(Exception e){
 			out.print(e);
 		}
-	%>
-	
-	<%
+
 		ApplicationDB db = new ApplicationDB();	
 		Connection con = db.getConnection();
 	
