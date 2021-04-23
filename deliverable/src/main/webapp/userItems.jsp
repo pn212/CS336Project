@@ -157,7 +157,7 @@ try{
 	int numAuctions = 0;
 	for (int i = 0; i < auctionIdList.size(); i++){
 		int auctionId = auctionIdList.get(i);
-		if (!DateCheck.expiredAuction(endingDateTimeList.get(i)) ){
+		if (!DateCheck.isLiveAuction(endingDateTimeList.get(i)) ){
 			Auction.endAuction(auctionId, conn);
 			continue;
 		}
@@ -177,7 +177,7 @@ try{
 		// create an arraylist of strings where each string is a row in the displayed items list
 		ArrayList<String> rows2 = new ArrayList<String>();
 		for(int i = 0; i < itemIdList2.size(); i++){
-			if (!DateCheck.expiredAuction(endingDateTimeList.get(i)) ){
+			if (!DateCheck.isLiveAuction(endingDateTimeList.get(i)) ){
 				Auction.endAuction(auctionIdList.get(i), conn);
 				continue;
 			}
