@@ -77,7 +77,7 @@ try{
 		</form>
 		<%
 	}
-	else if(endTime == null || DateCheck.validCreate(endTime) == 0){
+	else if(endTime == null || !DateCheck.validCreate(endTime)){
 		%>
 		<form id = "invalidDate" method = "post" action = "createAuction.jsp?error=invalidDate">
 			<input type = "hidden" name = "items" value = "<%=itemId %>">

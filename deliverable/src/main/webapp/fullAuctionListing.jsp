@@ -66,7 +66,7 @@ try{
 	int numAuctions = 0;
 	for (int i = 0; i < auctionIds.size(); i++){
 		int auctionId = auctionIds.get(i);
-		if(DateCheck.expiredAuction(auctionEndings.get(i)) == 0){
+		if(!DateCheck.expiredAuction(auctionEndings.get(i))){
 			Auction.endAuction(auctionId, conn);
 			continue;
 		}

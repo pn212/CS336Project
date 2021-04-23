@@ -10,11 +10,11 @@ import javax.servlet.*;
 
 
 public class Auction {
-	// returns 0 if failed, 1 if successful
-	public static int endAuction(int auctionId, Connection conn) throws SQLException{
+	// returns false if failed, true if successful
+	public static boolean endAuction(int auctionId, Connection conn) throws SQLException{
 		try{
 			if (conn == null) {
-				return 0;
+				return false;
 			}
 			
 			// get auction info
@@ -33,12 +33,13 @@ public class Auction {
 			}
 			
 			// get item info
-			String itemInfo = "SELECT name FROM item WHERE itemId = ?";
+			String itemInfo = "SELECT i.name name, e.userId userId FROM Item i, endUser e WHERE itemId = ? AND i.userId = e.userId";
 			PreparedStatement itemInfoStmt = conn.prepareStatement(itemInfo);
 			itemInfoStmt.setInt(1, itemId);
 			ResultSet itemInfoRS = itemInfoStmt.executeQuery();
 			itemInfoRS.next();
 			String itemName = itemInfoRS.getString("name");
+			int sellerId = itemInfoRS.getInt("userId");
 			
 			
 			// once an auction is over the item can not be resold on the site even if there was no winner
@@ -113,11 +114,19 @@ public class Auction {
 				int messageStatus = auctionIA.executeUpdate();
 			}
 			
-			return 1; 
+			// send alert an seller that auction has concluded
+			String sellerAlert = "INSERT into Alert (userId, alertMessage, alertDateTime) VALUES(?, ?, ?)";
+			PreparedStatement sellerIA = conn.prepareStatement(sellerAlert);
+			sellerIA.setInt(1, sellerId);
+			sellerIA.setString(2, "Your auction: " + auctionName + " for item: " + itemName + " has concluded");
+			sellerIA.setString(3, currDateTime);
+			int sellerAlertStatus = sellerIA.executeUpdate();
+			
+			return true; 
 			
 			
 		} catch(Exception e){
-			return 0;
+			return false;
 		}
 
 	}
