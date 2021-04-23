@@ -78,14 +78,9 @@ try{
 	endTimeRS.next();
 	String endingTime = endTimeRS.getString("endingDateTime");
 	endingTime = endingTime.substring(0, endingTime.length() - 2);
-	if (DateCheck.expiredAuction(endingTime) == 0){ // auction is past closing time
-		%>
-		<form id = "setAuctionWinner" method = "post" action = "auctionWinner.jsp">
-			<input type = "hidden" name = "auctionId" value = "<%= auctionId %>">
-			<input type = "hidden" name = "source" value = "placeBid">
- 		</form>
-		<script>document.getElementById("setAuctionWinner").submit();</script>
-		<%	
+	if (!DateCheck.isLiveAuction(endingTime)){ // auction is past closing time
+		Auction.endAuction(auctionId, conn);
+		response.sendRedirect("fullAuctionListing.jsp");
 		return;
 	}
 	

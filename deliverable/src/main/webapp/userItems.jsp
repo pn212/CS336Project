@@ -94,7 +94,7 @@ try{
 	}
 	if(itemIdList.size() == 0){
 		%>
-		List of Items:
+		<b>List of Items:</b>
 		<br> <br>
 		You have no items
 		<%
@@ -109,7 +109,7 @@ try{
 		// make rows a radio button group
 		
 		%>
-		List of Items:
+		<b>List of Items:</b>
 		<br> <br>
 		ItemId		Item Information
 		<form method = "post" action = "createAuction.jsp">
@@ -131,13 +131,14 @@ try{
 	<%} %>
 	
 	<br>
-	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 	<br>
-	List of Items on Auction:
+	<br>
+	<b>List of Items on Auction:</b>
 	<br> <br>
 	<%
-	String cmd = "SELECT distinct itemId FROM Item WHERE userId = ? AND itemStatus = ? AND itemId IN (SELECT  "
-				+ "itemId FROM Auction) ORDER BY itemId ASC";
+	String cmd = "SELECT i.itemId itemId, a.auctionId auctionId, a.endingDateTime endingDateTime FROM Item i, Auction a WHERE i.userId = ? AND i.itemStatus = ? AND i.itemId = a.itemId AND i.itemId IN (SELECT  "
+				+ "a.itemId FROM Auction a) ORDER BY i.itemId ASC";
 
 	PreparedStatement auctionPS = conn.prepareStatement(cmd);
 	auctionPS.setInt(1, userId);
@@ -146,10 +147,24 @@ try{
 	
 	// move ids into an ArrayList
 	ArrayList<Integer> itemIdList2 = new ArrayList<Integer>();
+	ArrayList<Integer> auctionIdList = new ArrayList<Integer>();
+	ArrayList<String> endingDateTimeList = new ArrayList<String>();
 	while(auctionRS.next()){
 		itemIdList2.add(auctionRS.getInt("itemId"));
+		auctionIdList.add(auctionRS.getInt("auctionId"));
+		endingDateTimeList.add(auctionRS.getString("endingDateTime"));
 	}
-	if(itemIdList2.size() == 0){
+	int numAuctions = 0;
+	for (int i = 0; i < auctionIdList.size(); i++){
+		int auctionId = auctionIdList.get(i);
+		if (!DateCheck.isLiveAuction(endingDateTimeList.get(i)) ){
+			Auction.endAuction(auctionId, conn);
+			continue;
+		}
+		numAuctions++;
+	}
+	
+	if(itemIdList2.size() == 0 || numAuctions == 0){
 		%>
 		You have no items that currently have auctions
 		<%
@@ -162,6 +177,10 @@ try{
 		// create an arraylist of strings where each string is a row in the displayed items list
 		ArrayList<String> rows2 = new ArrayList<String>();
 		for(int i = 0; i < itemIdList2.size(); i++){
+			if (!DateCheck.isLiveAuction(endingDateTimeList.get(i)) ){
+				Auction.endAuction(auctionIdList.get(i), conn);
+				continue;
+			}
 			String row2 = createRow(itemIdList2.get(i), conn);
 			rows2.add(row2);
 		}
@@ -177,7 +196,7 @@ try{
 	%>
 	
 	<br>
-
+	<br>
 	<a href = "itemSubCat.jsp">Create a New Item</a>
 	<br><br>
 	<form method = "post" action = "account.jsp">
