@@ -71,6 +71,7 @@ try{
 			auctionIds.remove(i);
 			auctionNames.remove(i);
 			auctionEndings.remove(i);
+			itemNames.remove(i);
 			continue;
 		}
 	}
