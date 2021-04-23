@@ -32,6 +32,7 @@
 		}
 		catch(Exception e){
 			out.print(e);
+			return;
 		}
 
 		ApplicationDB db = new ApplicationDB();	
