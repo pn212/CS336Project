@@ -84,19 +84,23 @@
 				itemEarnings = Generic.getSortedMap(itemEarnings, true);
 				itemTypeEarnings = Generic.getSortedMap(itemTypeEarnings, true);
 
+				int rank = 1;
 				%>
 				<p class="table-name">Total Earnings: <%=Prices.formatPrice(totalEarnings)%></p>
 				
 				<span class="table-name">Seller Earnings</span>
 				<table>
 					<tr>
+						<th>Ranking</th>
 						<th>User ID</th>
 						<th>Net Earnings</th>
 					</tr>
 					<%
+					rank = 1;
 					for (int sellerId : sellerEarnings.keySet()) {
 						%>
 						<tr>
+							<td><%=rank++%></td>
 							<td><%=sellerId%></td>
 							<td><%=Prices.formatPrice(sellerEarnings.get(sellerId))%></td>
 						</tr>
@@ -110,13 +114,16 @@
 				<span class="table-name">Item Earnings</span>
 				<table>
 					<tr>
+						<th>Ranking</th>
 						<th>Item Name</th>
 						<th>Net Earnings</th>
 					</tr>
 					<%
+					rank = 1;
 					for (String itemName : itemEarnings.keySet()) {
 						%>
 						<tr>
+							<td><%=rank++%></td>
 							<td><%=itemName%></td>
 							<td><%=Prices.formatPrice(itemEarnings.get(itemName))%></td>
 						</tr>
@@ -130,13 +137,16 @@
 				<span class="table-name">Item Type Earnings</span>
 				<table>
 					<tr>
+						<th>Ranking</th>
 						<th>Item Type</th>
 						<th>Net Earnings</th>
 					</tr>
 					<%
+					rank = 1;
 					for (String itemType : itemTypeEarnings.keySet()) {
 						%>
 						<tr>
+							<td><%=rank++%></td>
 							<td><%=itemType%></td>
 							<td><%=Prices.formatPrice(itemTypeEarnings.get(itemType))%></td>
 						</tr>
@@ -150,13 +160,16 @@
 				<span class="table-name">Best-Selling Items</span>
 				<table>
 					<tr>
+						<th>Ranking</th>
 						<th>Item Type</th>
 						<th>Total Sales</th>
 					</tr>
 					<%
+					rank = 1;
 					for (String itemType : bestItems.keySet()) {
 						%>
 						<tr>
+							<td><%=rank++%></td>
 							<td><%=itemType%></td>
 							<td><%=bestItems.get(itemType)%></td>
 						</tr>
@@ -170,13 +183,16 @@
 				<span class="table-name">Best Buyers</span>
 				<table>
 					<tr>
+						<th>Ranking</th>
 						<th>User ID</th>
 						<th>Total Auctions Won</th>
 					</tr>
 					<%
+					rank = 1;
 					for (int buyerId : bestBuyers.keySet()) {
 						%>
 						<tr>
+							<td><%=rank++%></td>
 							<td><%=buyerId%></td>
 							<td><%=bestBuyers.get(buyerId)%></td>
 						</tr>
