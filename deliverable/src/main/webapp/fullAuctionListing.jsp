@@ -63,18 +63,20 @@ try{
 		auctionEndings.add(rs.getString("endingDateTime"));
 		itemNames.add(rs.getString("itemName"));
 	}
-	int numAuctions = 0;
-	for (int i = 0; i < auctionIds.size(); i++){
+	
+	for (int i = auctionIds.size() - 1; i >= 0; i--){
 		int auctionId = auctionIds.get(i);
 		if(!DateCheck.isLiveAuction(auctionEndings.get(i))){
 			Auction.endAuction(auctionId, conn);
+			auctionIds.remove(i);
+			auctionNames.remove(i);
+			auctionEndings.remove(i);
 			continue;
 		}
-		numAuctions++;
 	}
 	
 	
-	if (auctionIds.size() == 0 || numAuctions == 0){
+	if (auctionIds.size() == 0){
 		out.print("There are no auctions to bid on");
 	}
 	else{
