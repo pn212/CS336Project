@@ -176,12 +176,17 @@ try{
 	auctionGM.setInt(2, auctionId);
 	ResultSet auctionRM = auctionGM.executeQuery();
 
-	
+	double minBid;
 	// no bids yet
 	if(!auctionRM.next()){
 		String starting = auctionRR.getString("startPrice");
 		out.print("The Current Auction Has No Bids Placed, The Starting Price is: " + Prices.formatPrice(Prices.getPrice(starting)));
 		out.print("<br>");
+		minBid = Prices.getPrice(starting);
+		if (minBid == 0){
+			minBid = 0.01;
+		}
+		
 	}
 	// current highest bid
 	else{
@@ -189,8 +194,9 @@ try{
 		//highestBid = Double.parseDouble(auctionMax);
 		out.print("The Current Highest Bid is: " + Prices.formatPrice(Prices.getPrice(highestBid)));
 		out.print("<br>");
+		minBid = Prices.getPrice(highestBid) + incPrice;
 	}
-	
+	out.print("Please enter a bid of " + Prices.formatPrice(minBid) + " or greater");
 	 
 	%>
 	<form method = "post" action = "placeBid.jsp">
