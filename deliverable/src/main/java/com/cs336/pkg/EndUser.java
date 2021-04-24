@@ -98,6 +98,11 @@ public class EndUser {
 			stmt2.setInt(1, userId);
 			stmt2.executeUpdate();
 			
+			String sql3 = "DELETE FROM Bid b where b.userId = ? AND (SELECT itemStatus FROM Item i WHERE i.itemId = (SELECT itemId FROM Auction a WHERE b.auctionId = a.auctionId LIMIT 1)) = 0";
+			PreparedStatement stmt3 = con.prepareStatement(sql3);
+			stmt3.setInt(1, userId);
+			stmt3.executeUpdate();
+			
 			String sql = "DELETE FROM EndUser where userId = ?";
 			PreparedStatement stmt = con.prepareStatement(sql);
 			stmt.setInt(1, userId);
