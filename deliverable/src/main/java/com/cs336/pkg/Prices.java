@@ -36,8 +36,12 @@ public class Prices {
 	}
 	
 	public static boolean isValidBid(double bidAmount, double startPrice, double highestBidAmount, double incPrice){
-		if (bidAmount < startPrice) return false;
-		if (bidAmount < highestBidAmount + incPrice) return false;
-		return true;
+		if(highestBidAmount == 0) { // no bids placed yet
+			if(startPrice == 0){
+				return bidAmount > startPrice; // don't allow initial bid to be 0
+			}
+			return bidAmount >= startPrice; // otherwise initial bid can be startPrice or greater
+		}
+		return bidAmount >= highestBidAmount + incPrice;
 	}
 }
