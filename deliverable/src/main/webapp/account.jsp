@@ -110,6 +110,7 @@
 		if (userTable != null && userTable.equals("customerSupport")) {
 			%> 
 			<br> <a href="updateUsers.jsp">Update and Delete End Users</a>
+			<br> <a href="removeAuction.jsp">Remove Auctions</a>
 			<%
 		}
 	%>
