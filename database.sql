@@ -162,7 +162,7 @@ CREATE TABLE Item (
     -- itemStatus = 1 means the item has been sold --
     -- itemStatus = 2 means the item had an auction concluded but there was no winner -- 
     itemStatus int NOT NULL default 0,
-    userId int,
+    userId int NOT NULL,
     FOREIGN KEY (userId) references endUser (userId) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -187,7 +187,7 @@ CREATE TABLE Bid (
 	amount decimal(15,2) NOT NULL,
     bidDateTime datetime NOT NULL,
     auctionId int NOT NULL,
-    userId int,
+    userId int NOT NULL,
     PRIMARY KEY (auctionId, amount),
     FOREIGN KEY (auctionId) references Auction (auctionId),
     FOREIGN KEY (userId) references endUser (userId) ON DELETE SET NULL
@@ -198,14 +198,14 @@ DROP TABLE IF EXISTS AlertSettings;
 CREATE TABLE AlertSettings (
 	alertSettingsId int AUTO_INCREMENT PRIMARY KEY,
     userId int,
-    FOREIGN KEY (userId) references endUser (userId) ON DELETE CASCADE
+    FOREIGN KEY (userId) references endUser (userId) ON DELETE SET NULL
 );
 
 -- Table Structure for AutoBid --
 DROP TABLE IF EXISTS AutoBid;
 CREATE TABLE AutoBid (
 	maxAmount decimal(15,2) NOT NULL,
-    userID int,
+    userID int NOT NULL,
     auctionId int NOT NULL,
     PRIMARY KEY (userId, auctionId),
     FOREIGN KEY (userId) references endUser (userId) ON DELETE CASCADE,
@@ -219,7 +219,7 @@ CREATE TABLE Alert(
     alertMessage varchar(1000),
     alertDateTime datetime,
     alertRead bool NOT NULL default false,
-    foreign key (userId) references endUser (userId) ON DELETE CASCADE
+    foreign key (userId) references endUser (userId) ON DELETE SET NULL
 );
 
 DROP TABLE IF EXISTS ItemAttribute;
@@ -251,7 +251,7 @@ CREATE TABLE ForumPost (
 	title varchar(50) NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 	description varchar(1000) NOT NULL,
-	userId int,
+	userId int NOT NULL,
 	PRIMARY KEY (postId),
 	FOREIGN KEY (userId) references EndUser (userId) ON DELETE SET NULL
 );
@@ -274,7 +274,7 @@ CREATE TABLE ForumComment (
     postId int NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 	content varchar(1000) NOT NULL,
-	userId int,
+	userId int NOT NULL,
 	PRIMARY KEY (commentId),
 	FOREIGN KEY (userId) references EndUser (userId) ON DELETE SET NULL,
     FOREIGN KEY (postId) references ForumPost (postId)
