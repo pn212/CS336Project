@@ -59,7 +59,7 @@
 			}
 			else {
 				if (action.equals("Delete")) {
-					if (Auction.deleteAuction(selectedId)) {
+					if (selectedAuction.delete()) {
 						int index = auctions.indexOf(selectedAuction);
 						auctions.remove(index);
 						out.print("Deleted auction "+selectedId);

@@ -2,6 +2,9 @@ package com.cs336.pkg;
 import java.io.*;
 import java.util.*;
 import java.sql.*;
+import java.util.Date;
+import java.time.LocalDate;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import javax.servlet.http.*;
@@ -12,10 +15,12 @@ import javax.servlet.*;
 public class Auction {
 	private int id;
 	private String name;
+	private String endingDate;
 
-	private Auction(int id, String name) {
+	private Auction(int id, String name, String endingDate) {
 		this.id = id;
 		this.name = name;
+		this.endingDate = endingDate;
 	}
 	
 	public String getName() {
@@ -24,6 +29,10 @@ public class Auction {
 	
 	public int getId() {
 		return this.id;
+	}
+	
+	public String getEndingDate() {
+		return this.endingDate;
 	}
 	
 	// returns false if failed, true if successful
@@ -147,19 +156,37 @@ public class Auction {
 
 	}
 	
-	public static boolean deleteAuction(int auctionId) {
+	public boolean delete() {		
 		ApplicationDB db = new ApplicationDB();	
 		Connection con = db.getConnection();
 		
 		if (con == null) {
 			return false;
 		}
+
+		boolean success = true;
+
 		
-		boolean success = false;
+		try {
+			if (!DateCheck.isLiveAuction(endingDate)) {
+				Auction.endAuction(id, con);
+				success = false;
+			}
+		} catch (ParseException e) {
+			success = false;
+		} catch (SQLException e) {
+			success = false;
+		}
+		
+		if (!success) {
+			db.closeConnection(con);
+			return false;
+		}
+		
 		try {			
 			String sql = "DELETE FROM Auction WHERE auctionId = ? AND (SELECT i.itemStatus FROM Item i WHERE itemId = i.itemId LIMIT 1) = 0";
 			PreparedStatement stmt = con.prepareStatement(sql);
-			stmt.setInt(1, auctionId);
+			stmt.setInt(1, id);
 			success = stmt.executeUpdate() == 1;
 		} catch(SQLException e) {
 			e.printStackTrace();
@@ -179,18 +206,29 @@ public class Auction {
 		}
 		
 		try {
-			String sql = "SELECT auctionId, auctionName FROM Auction JOIN Item using(itemId) WHERE itemStatus = 0";
+			String sql = "SELECT auctionId, auctionName, endingDateTime FROM Auction JOIN Item using(itemId) WHERE itemStatus = 0";
 			ResultSet results = con.createStatement().executeQuery(sql);
 			
 			ArrayList<Auction> auctions = new ArrayList<Auction>();
 			while (results.next()) {
 				int id = results.getInt("auctionId");
 				String name = results.getString("auctionName");
+				String ending = results.getString("endingDateTime");
 				
-				auctions.add(new Auction(
-					id,
-					name
-				));
+				try {
+					if (DateCheck.isLiveAuction(ending)) {
+						auctions.add(new Auction(
+							id,
+							name,
+							ending
+						));
+					}
+					else {
+						Auction.endAuction(id, con);
+					}
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
 			}
 			
 			db.closeConnection(con);
