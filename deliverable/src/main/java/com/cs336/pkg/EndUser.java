@@ -93,6 +93,11 @@ public class EndUser {
 		
 		boolean success = false;
 		try {
+			String sql2 = "DELETE FROM Item WHERE userId = ? AND itemStatus = 0";
+			PreparedStatement stmt2 = con.prepareStatement(sql2);
+			stmt2.setInt(1, userId);
+			stmt2.executeUpdate();
+			
 			String sql = "DELETE FROM EndUser where userId = ?";
 			PreparedStatement stmt = con.prepareStatement(sql);
 			stmt.setInt(1, userId);
