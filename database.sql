@@ -198,7 +198,7 @@ DROP TABLE IF EXISTS AlertSettings;
 CREATE TABLE AlertSettings (
 	alertSettingsId int AUTO_INCREMENT PRIMARY KEY,
     userId int,
-    FOREIGN KEY (userId) references endUser (userId) ON DELETE SET NULL
+    FOREIGN KEY (userId) references endUser (userId) ON DELETE CASCADE
 );
 
 -- Table Structure for AutoBid --
@@ -219,7 +219,7 @@ CREATE TABLE Alert(
     alertMessage varchar(1000),
     alertDateTime datetime,
     alertRead bool NOT NULL default false,
-    foreign key (userId) references endUser (userId) ON DELETE SET NULL
+    foreign key (userId) references endUser (userId) ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS ItemAttribute;
@@ -230,7 +230,7 @@ CREATE TABLE ItemAttribute (
     catName varchar(50) NOT NULL,
     PRIMARY KEY (`name`, catName, itemId),
     FOREIGN KEY (`name`, catName) references AttributeName (`name`, catName),
-    FOREIGN KEY(itemId) references Item (itemId)    
+    FOREIGN KEY(itemId) references Item (itemId) ON DELETE CASCADE   
 );
 
 DROP TABLE IF EXISTS AlertForAttributeName;
@@ -240,7 +240,7 @@ CREATE TABLE AlertForAttributeName (
     catName varchar(50) NOT NULL,
     attributeValue varchar(100) NOT NULL,
     PRIMARY KEY (`name`, alertSettingsId, catName),
-    FOREIGN KEY (alertSettingsId) references AlertSettings (alertSettingsId),
+    FOREIGN KEY (alertSettingsId) references AlertSettings (alertSettingsId) ON DELETE CASCADE,
     FOREIGN KEY (`name`, catName) references AttributeName (`name`, catName)
 );
 
