@@ -71,7 +71,13 @@
 					}
 				}
 				else if (action.equals("View Bids")) {
-					// redirect
+					%>
+					<form id="redirect" method="post" action="removeBid.jsp">
+						<input name="auctionId" hidden value=<%=selectedId%> />
+					</form>
+					<script>document.getElementById("redirect").submit();</script>
+					<%
+					return;
 				}
 			}
 		}
