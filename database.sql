@@ -189,7 +189,7 @@ CREATE TABLE Bid (
     auctionId int NOT NULL,
     userId int NOT NULL,
     PRIMARY KEY (auctionId, amount),
-    FOREIGN KEY (auctionId) references Auction (auctionId),
+    FOREIGN KEY (auctionId) references Auction (auctionId) ON DELETE CASCADE,
     FOREIGN KEY (userId) references endUser (userId) ON DELETE SET NULL
 );
 
