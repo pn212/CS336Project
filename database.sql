@@ -162,7 +162,7 @@ CREATE TABLE Item (
     -- itemStatus = 1 means the item has been sold --
     -- itemStatus = 2 means the item had an auction concluded but there was no winner -- 
     itemStatus int NOT NULL default 0,
-    userId int NOT NULL,
+    userId int,
     FOREIGN KEY (userId) references endUser (userId) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -187,7 +187,7 @@ CREATE TABLE Bid (
 	amount decimal(15,2) NOT NULL,
     bidDateTime datetime NOT NULL,
     auctionId int NOT NULL,
-    userId int NOT NULL,
+    userId int,
     PRIMARY KEY (auctionId, amount),
     FOREIGN KEY (auctionId) references Auction (auctionId) ON DELETE CASCADE,
     FOREIGN KEY (userId) references endUser (userId) ON DELETE SET NULL
@@ -251,7 +251,7 @@ CREATE TABLE ForumPost (
 	title varchar(50) NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 	description varchar(1000) NOT NULL,
-	userId int NOT NULL,
+	userId int,
 	PRIMARY KEY (postId),
 	FOREIGN KEY (userId) references EndUser (userId) ON DELETE SET NULL
 );
@@ -274,7 +274,7 @@ CREATE TABLE ForumComment (
     postId int NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 	content varchar(1000) NOT NULL,
-	userId int NOT NULL,
+	userId int,
 	PRIMARY KEY (commentId),
 	FOREIGN KEY (userId) references EndUser (userId) ON DELETE SET NULL,
     FOREIGN KEY (postId) references ForumPost (postId)
