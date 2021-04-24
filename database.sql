@@ -177,7 +177,7 @@ CREATE TABLE Auction (
     endingDateTime datetime NOT NULL,
     itemId int NOT NULL,
     auctionId int AUTO_INCREMENT PRIMARY KEY,
-    FOREIGN KEY (itemId) references Item (itemId)
+    FOREIGN KEY (itemId) references Item (itemId) ON DELETE CASCADE
     
 ) ;
 
