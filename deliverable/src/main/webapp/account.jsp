@@ -106,6 +106,13 @@
 			<%
 		}
 	%>
+	<%
+		if (userTable != null && userTable.equals("customerSupport")) {
+			%> 
+			<br> <a href="updateUsers.jsp">Update and Delete End Users</a>
+			<%
+		}
+	%>
 
 </body>
 </html>
