@@ -10,6 +10,22 @@ import javax.servlet.*;
 
 
 public class Auction {
+	private int id;
+	private String name;
+
+	private Auction(int id, String name) {
+		this.id = id;
+		this.name = name;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public int getId() {
+		return this.id;
+	}
+	
 	// returns false if failed, true if successful
 	public static boolean endAuction(int auctionId, Connection conn) throws SQLException{
 		try{
@@ -129,5 +145,61 @@ public class Auction {
 			return false;
 		}
 
+	}
+	
+	public static boolean deleteAuction(int auctionId) {
+		ApplicationDB db = new ApplicationDB();	
+		Connection con = db.getConnection();
+		
+		if (con == null) {
+			return false;
+		}
+		
+		boolean success = false;
+		try {			
+			String sql = "DELETE FROM Auction WHERE auctionId = ? AND (SELECT i.itemStatus FROM Item i WHERE itemId = i.itemId LIMIT 1) = 0";
+			PreparedStatement stmt = con.prepareStatement(sql);
+			stmt.setInt(1, auctionId);
+			success = stmt.executeUpdate() == 1;
+		} catch(SQLException e) {
+			e.printStackTrace();
+			success = false;
+		}
+		
+		db.closeConnection(con);
+		return success;
+	}
+	
+	public static ArrayList<Auction> getAuctions() {
+		ApplicationDB db = new ApplicationDB();	
+		Connection con = db.getConnection();
+		
+		if (con == null) {
+			return null;
+		}
+		
+		try {
+			String sql = "SELECT auctionId, auctionName FROM Auction JOIN Item using(itemId) WHERE itemStatus = 0";
+			ResultSet results = con.createStatement().executeQuery(sql);
+			
+			ArrayList<Auction> auctions = new ArrayList<Auction>();
+			while (results.next()) {
+				int id = results.getInt("auctionId");
+				String name = results.getString("auctionName");
+				
+				auctions.add(new Auction(
+					id,
+					name
+				));
+			}
+			
+			db.closeConnection(con);
+			
+			return auctions;
+		} catch(SQLException e) {
+			e.printStackTrace();
+			db.closeConnection(con);
+			return null;
+		}
 	}
 }
