@@ -158,7 +158,6 @@ try{
 	for (int i = 0; i < auctionIdList.size(); i++){
 		int auctionId = auctionIdList.get(i);
 		if (!DateCheck.isLiveAuction(endingDateTimeList.get(i)) ){
-			Auction.endAuction(auctionId, conn);
 			continue;
 		}
 		numAuctions++;
