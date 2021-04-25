@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Auction Site|Add Item</title>
+<title>Auction Site | Add Item</title>
 </head>
 <body>
 <%!
@@ -22,6 +22,7 @@ public boolean emptyFields(ArrayList<String> Attributes, HttpServletRequest requ
 		
 	return false;
 }
+
 
 public boolean invalidFieldLength(ArrayList<String> Attributes, HttpServletRequest request){
 	final int MAX_NAME_LEN = 100;
