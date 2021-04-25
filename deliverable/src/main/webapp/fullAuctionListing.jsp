@@ -122,6 +122,7 @@ try{
 			</table>
 			<input type = "submit" value = "Place Bid" formaction = "placeBid.jsp">
 			<input type = "submit" value = "View Information" formaction = "auctionInformation.jsp">
+			<input type = "submit" value = "View Bid History" formaction = "bidHistory.jsp">
 	 	</form>
 	 	<% 
 	} %>
