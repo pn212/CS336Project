@@ -265,7 +265,7 @@ CREATE TABLE ForumAnswer (
 	userId int NOT NULL,
 	PRIMARY KEY (answerId),
 	FOREIGN KEY (userId) references CustomerSupport (userId),
-    FOREIGN KEY (postId) references ForumPost (postId)
+    FOREIGN KEY (postId) references ForumPost (postId) ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS ForumComment;
@@ -277,5 +277,5 @@ CREATE TABLE ForumComment (
 	userId int,
 	PRIMARY KEY (commentId),
 	FOREIGN KEY (userId) references EndUser (userId) ON DELETE SET NULL,
-    FOREIGN KEY (postId) references ForumPost (postId)
+    FOREIGN KEY (postId) references ForumPost (postId) ON DELETE CASCADE
 );

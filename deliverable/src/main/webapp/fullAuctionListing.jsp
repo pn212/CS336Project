@@ -64,6 +64,8 @@ try{
 		itemNames.add(rs.getString("itemName"));
 	}
 	
+	// check if any auction has expired before listing
+	
 	for (int i = auctionIds.size() - 1; i >= 0; i--){
 		int auctionId = auctionIds.get(i);
 		if(!DateCheck.isLiveAuction(auctionEndings.get(i))){
@@ -75,7 +77,6 @@ try{
 			continue;
 		}
 	}
-	
 	
 	if (auctionIds.size() == 0){
 		out.print("There are no auctions to bid on");
@@ -122,6 +123,7 @@ try{
 			</table>
 			<input type = "submit" value = "Place Bid" formaction = "placeBid.jsp">
 			<input type = "submit" value = "View Information" formaction = "auctionInformation.jsp">
+			<input type = "submit" value = "View Bid History" formaction = "BidHistory.jsp">
 	 	</form>
 	 	<% 
 	} %>

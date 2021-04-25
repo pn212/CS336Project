@@ -161,17 +161,17 @@
 				<table>
 					<tr>
 						<th>Ranking</th>
-						<th>Item Type</th>
+						<th>Item Name</th>
 						<th>Total Sales</th>
 					</tr>
 					<%
 					rank = 1;
-					for (String itemType : bestItems.keySet()) {
+					for (String itemName : bestItems.keySet()) {
 						%>
 						<tr>
 							<td><%=rank++%></td>
-							<td><%=itemType%></td>
-							<td><%=bestItems.get(itemType)%></td>
+							<td><%=itemName%></td>
+							<td><%=bestItems.get(itemName)%></td>
 						</tr>
 						<%
 					}

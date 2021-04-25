@@ -92,9 +92,12 @@
 	
 		if (userTable != null && userTable.equals("endUser")) {
 			%> 
-			<br>  <a href = "userItems.jsp">View Items</a> 
+			<br> <a href = "userItems.jsp">View My Items/Auctions</a>
+			<br> <a href = "browseItems.jsp">Browse Items</a>
 			<br> <a href = "chooseAlerts.jsp">View Alerts</a>
 			<br> <a href = "fullAuctionListing.jsp">View All Auctions</a>
+			<br> <a href = "forumPost.jsp">View Forum</a>
+			<br> <a href = "enduserList.jsp">View Other Users</a> 
 			<%
 		}
 	%>
@@ -111,6 +114,8 @@
 		if (userTable != null && userTable.equals("customerSupport")) {
 			%> 
 			<br> <a href="updateUsers.jsp">Update and Delete End Users</a>
+			<br> <a href="removeAuction.jsp">Remove Auctions</a>
+			<br> <a href = "forumPost.jsp">View Forum</a> 
 			<%
 		}
 	%>
