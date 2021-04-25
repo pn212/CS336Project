@@ -71,7 +71,7 @@
 		%>
 		
 		</table>
-		<br> Here is a list of all items currently on auction and the highest bid on those items: <br><br>
+		<br><br> Here is a list of all items currently on auction and the highest bid on those items: <br><br>
 
 		<%	} catch (Exception e) {
 				out.print(e);
@@ -86,8 +86,9 @@
 			//Get the selected radio button from the index.jsp
 			//String entity = request.getParameter("command");
 			//Make a SELECT query from the table specified by the 'command' parameter at the index.jsp
-			String str = "select itemId, auctionId, max(amount) as bid from auction join bid "
-				+ "using(auctionId) group by itemId;";
+			String str = "select a.itemId, a.auctionId, max(b.amount) as bid from item i, auction a, "
+				+ "bid b where (a.auctionId = b.auctionId and a.itemId = i.itemId and i.itemStatus = 0) "
+				+ "group by itemId;";
 			//Run the query against the database.
 			ResultSet result = stmt.executeQuery(str);
 		%>
