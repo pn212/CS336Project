@@ -96,7 +96,8 @@
 			<br> <a href = "browseItems.jsp">Browse Items</a>
 			<br> <a href = "chooseAlerts.jsp">View Alerts</a>
 			<br> <a href = "fullAuctionListing.jsp">View All Auctions</a>
-			<br> <a href = "forumPost.jsp">View Forum</a> 
+			<br> <a href = "forumPost.jsp">View Forum</a>
+			<br> <a href = "enduserList.jsp">View Other Users</a> 
 			<%
 		}
 	%>
