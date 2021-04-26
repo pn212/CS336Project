@@ -106,6 +106,7 @@
 			%> 
 			<br> <a href="csAccountCreate.jsp">Customer Service Account Creation</a>
 			<br> <a href="salesReport.jsp">View Sales Report</a>
+			<br> <a href="createSubCat.jsp">Create New SubCategory</a>
 			<%
 		}
 	%>
