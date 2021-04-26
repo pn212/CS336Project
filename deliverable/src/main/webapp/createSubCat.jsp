@@ -1,5 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1" import="com.cs336.pkg.*"%>
+<%@ page import="java.io.*,java.util.*,java.sql.*"%>
+<%@ page import="java.text.SimpleDateFormat, java.text.DecimalFormat" %>
+<%@ page import="javax.servlet.http.*,javax.servlet.*"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,31 +15,112 @@
 </style>
 </head>
 <body>
-	<%
-		try {
-			// if user is not an authorized admin, show 404 error
-			if (session.getAttribute("userId") == null || session.getAttribute("userTable") == null) {
-				response.sendError(404, request.getRequestURI());
-				return;
+	
+	<%!
+	public static boolean validAttributes (ArrayList<String> attributes, ArrayList<String> domains){
+		final int MAX_ATTR_LENGTH = 50;
+		final int MAX_DOMAIN_LENGTH = 50;
+		boolean existsDuplicates = false;
+		for (int i = 0; i < attributes.size(); i++) {
+			if(attributes.get(i).length() > MAX_ATTR_LENGTH || domains.get(i).length() > MAX_DOMAIN_LENGTH){
+				return false;
 			}
-			else {
-				String userTable = (String) session.getAttribute("userTable");
-				
-				if (!userTable.equals("administrator")) {
-					response.sendError(404, request.getRequestURI());
-					return;
+			for (int j = i+1; j < attributes.size(); j++) {
+		    	if (attributes.get(i).toLowerCase().equals(attributes.get(j).toLowerCase())) {
+		      		existsDuplicates = true;
+		      		break;
 				}
 			}
 		}
-		catch(Exception e){
-			out.print(e);
-			return;
-		}
+		return !existsDuplicates;
+	}
 	
-		
 	%>
 	
-	<form id="create-form" method="post">
+	<%
+	try {
+		// if user is not an authorized admin, show 404 error
+		if (session.getAttribute("userId") == null || session.getAttribute("userTable") == null) {
+			response.sendError(404, request.getRequestURI());
+			return;
+		}
+		else {
+			String userTable = (String) session.getAttribute("userTable");
+			
+			if (!userTable.equals("administrator")) {
+				response.sendError(404, request.getRequestURI());
+				return;
+			}
+		}
+	}
+	catch(Exception e){
+		out.print(e);
+		return;
+	}
+	
+	//Get the database connection
+	if(request.getParameter("attr1") != null){
+		ArrayList<String> attributes = new ArrayList<String>();
+		ArrayList<String> domains = new ArrayList<String>();
+		int i = 1;
+		while(request.getParameter("attr" + i) != null){
+			attributes.add(request.getParameter("attr" + i));
+			domains.add(request.getParameter("domain" + i));
+			i++;
+		}
+		
+		if(!validAttributes(attributes, domains)){
+			out.print("Invalid attributes");
+		}
+		else{
+			final int MAX_CAT_LENGTH = 50;
+			String catName = "";
+			if(request.getParameter("name") != null){
+				catName = request.getParameter("name").trim();
+				if (catName.length() > MAX_CAT_LENGTH || catName.isEmpty()){
+					out.print("Invalid SubCategory name length");
+				}
+				else{
+					ApplicationDB db = new ApplicationDB();	
+					Connection conn = db.getConnection();
+					if (conn == null){
+						out.print("Could not connect to the database");
+					}
+					else{
+						boolean catExists = false;
+						for (String existingCat : SoldItem.getItemTypes(conn)){
+							if(existingCat.toLowerCase().equals(catName.toLowerCase())){
+								out.print("SubCategory already exists");
+								catExists = true;
+								break;
+							}
+						}
+						if (!catExists){
+							String subCatStmt = "INSERT into SubCategoryType (name) VALUES (?)";
+							PreparedStatement subCatPS = conn.prepareStatement(subCatStmt);
+							subCatPS.setString(1, catName);
+							int status = subCatPS.executeUpdate();
+							i = 1;
+							for(int index = 0; index < attributes.size(); index++){
+								String attrNameStmt = "INSERT into AttributeName (name, catName, domain) VALUES (?, ?, ?)";
+								PreparedStatement attrNamePS = conn.prepareStatement(attrNameStmt);
+								attrNamePS.setString(1, attributes.get(index));
+								attrNamePS.setString(2, catName);
+								attrNamePS.setString(3, domains.get(index));
+								int success = attrNamePS.executeUpdate();
+							}
+							out.print("Added SubCategory");
+						}	
+					}
+					db.closeConnection(conn);	
+				}
+			}
+		}
+	}
+	
+	%>
+	
+	<form id="create-form" method="post" action = "createSubCat.jsp">
 		<label for="name">SubCategory Name</label>
 		<input type="text" name="name" required id="name" />
 		<br>
@@ -122,5 +206,10 @@
 			form.removeChild(attrs[curLen-1]);
 		}
 	</script>
+
+	
+	
+		
+	
 </body>
 </html>
